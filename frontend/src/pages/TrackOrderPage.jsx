@@ -5,11 +5,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { divide } from "firebase/firestore/pipelines";
 import DeliveryBoyTracking from "../components/DeliveryBoyTracking";
-import DeliveryBoy from "../components/DeliveryBoy";
+// import DeliveryBoy from "../components/DeliveryBoy";
+import { useSelector } from "react-redux";
 
 function TrackOrderPage() {
+  const { socket } = useSelector((state) => state.user);
   const { orderId } = useParams();
   const [currentOrder, setCurrentOrder] = useState();
+  const [liveLocation, setLiveLocation] = useState({});
   const navigate = useNavigate();
   const handleGetOrder = async () => {
     try {
@@ -23,6 +26,18 @@ function TrackOrderPage() {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    socket.on(
+      "updateDeliveryLocation",
+      ({ deliveryBoyId, latitude, longitude }) => {
+        setLiveLocation((prev) => ({
+          ...prev,
+          [deliveryBoyId]: { lat: latitude, lon: longitude },
+        }));
+      },
+    );
+  }, [socket]);
 
   useEffect(() => {
     handleGetOrder();
@@ -82,7 +97,9 @@ function TrackOrderPage() {
               <div className="h-[400px] w-full rounded-2xl overflow-hidden shadow-md ">
                 <DeliveryBoyTracking
                   data={{
-                    deliveryBoyLocation: {
+                    deliveryBoyLocation: liveLocation[
+                      shopOrder.assignedDeliveryBoy._id
+                    ] || {
                       lat: shopOrder.assignedDeliveryBoy.location
                         .coordinates[1],
                       lon: shopOrder.assignedDeliveryBoy.location
