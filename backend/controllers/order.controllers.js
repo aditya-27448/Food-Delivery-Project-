@@ -373,7 +373,11 @@ export const getDeliveryBoyAssignment = async (req, res) => {
     }));
     return res.status(200).json(formatted);
   } catch (error) {
-    return res.status(500).json({ message: `get assignment error ${error}` });
+    console.error(error);
+    return res.status(500).json({
+      message: error.message,
+      stack: error.stack,
+    });
   }
 };
 

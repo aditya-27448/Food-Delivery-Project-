@@ -130,7 +130,7 @@ function DeliveryBoy() {
     return () => {
       socket?.off("newAssignment");
     };
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
     getAssignment();

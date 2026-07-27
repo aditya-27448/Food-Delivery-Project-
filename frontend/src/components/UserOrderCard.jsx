@@ -1,8 +1,11 @@
-import React from "react";
+import axios from "axios";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { serverURL } from "../App";
 
 function UserOrderCard({ data }) {
   const navigate = useNavigate();
+  const [selectedRating, setSelectedRating] = useState({}); //itemId:rating
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-Gb", {
@@ -11,6 +14,24 @@ function UserOrderCard({ data }) {
       year: "numeric",
     });
   };
+
+  const handleRating = async (itemId, rating) => {
+    try {
+      const result = await axios.post(
+        `${serverURL}/api/item/rating`,
+        { itemId, rating },
+        { withCredentials: true },
+      );
+      setSelectedRating((prev) => ({
+        ...prev,
+        [itemId]: rating,
+      }));
+      console.log(result.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="bg-white rounded-lg shadow space-y-4 p-4">
       <div className="flex justify-between border-b pb-2">
@@ -65,6 +86,19 @@ function UserOrderCard({ data }) {
                   <p className="text-xs text-gray-500 text-right">
                     ₹ {item.price * item.quantity}
                   </p>
+
+                  {shopOrder.status == "delivered" && (
+                    <div className="flex space-x-1 mt-2">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          className={`text-lg ${selectedRating[item.item._id] >= star ? "text-yellow-400" : "text-gray-400"}`}
+                          onClick={() => handleRating(item.item._id, star)}
+                        >
+                          ★
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
