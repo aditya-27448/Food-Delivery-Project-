@@ -1,10 +1,19 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Nav from "./Nav.jsx";
-import { useRouteLoaderData } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import axios from "axios";
 import { serverURL } from "../App";
 import DeliveryBoyTracking from "./DeliveryBoyTracking.jsx";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { ClockLoader } from "react-spinners";
 
 function DeliveryBoy() {
   const { userData, socket } = useSelector((state) => state.user);
@@ -15,6 +24,8 @@ function DeliveryBoy() {
   const [deliveryBoyLocation, setDeliveryBoyLocation] = useState(null);
   const [todayDeliveries, setTodayDeliveries] = useState([]);
   const [orderDelivered, setOrderDelivered] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     if (!socket || userData.role !== "deliveryBoy") {
@@ -54,6 +65,12 @@ function DeliveryBoy() {
       }
     };
   }, [socket, userData]);
+
+  const ratePerDelivery = 50;
+  const totalEarning = todayDeliveries.reduce(
+    (sum, d) => sum + d.count * ratePerDelivery,
+    0,
+  );
 
   const getAssignment = async () => {
     try {
@@ -98,19 +115,23 @@ function DeliveryBoy() {
   };
 
   const sendOtp = async () => {
+    setLoading(true);
     try {
       const result = await axios.post(
         `${serverURL}/api/order/send-delivery-otp`,
         { orderId: currentOrder._id, shopOrderId: currentOrder.shopOrder._id },
         { withCredentials: true },
       );
+      setLoading(false);
       setShowOtpBox(true);
       console.log("otp", result.data);
     } catch (error) {
+      setLoading(false);
       console.log("Accept order error", error);
     }
   };
   const verifyOtp = async () => {
+    setMessage("");
     try {
       const result = await axios.post(
         `${serverURL}/api/order/verify-delivery-otp`,
@@ -123,6 +144,7 @@ function DeliveryBoy() {
       );
       setOrderDelivered(true);
       console.log("otp", result.data);
+      setMessage(result.data.message);
     } catch (error) {
       console.log("Accept order error", error);
     }
@@ -179,6 +201,31 @@ function DeliveryBoy() {
             <span className="font-semibold"> Longitude:</span>
             {deliveryBoyLocation?.lon ?? "Loading..."}
           </p>
+        </div>
+        <div className="bg-white rounded-2xl shadow-md p-5 w-[90%] mb-6 border border-orange-100 ">
+          <h1 className="text-lg font-bold mb-3 text-[#ff4d2d]">
+            Today Deliveries
+          </h1>
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={todayDeliveries}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="hour" tickFormatter={(h) => `${h}:00`} />
+              <YAxis allowDecimals={false} />
+              <Tooltip
+                formatter={(value) => [value, "orders"]}
+                labelFormatter={(label) => `${label}:00`}
+              />
+              <Bar dataKey="count" fill="#ff4d2d" />
+            </BarChart>
+          </ResponsiveContainer>
+          <div className="max-w-sm mx-auto mt-6 p-6 bg-white rounded-2xl shadow-lg text-center">
+            <h1 className="text-xl font-semibold text-gray-800 mb-2">
+              Today's Earning
+            </h1>
+            <span className="text-3xl font-bold text-green-600 ">
+              ₹ {totalEarning}
+            </span>
+          </div>
         </div>
         {!currentOrder && (
           <div className="bg-white rounded-2xl p-5 shadow-md w-[90%] border border-orange-100 ">
@@ -264,8 +311,13 @@ function DeliveryBoy() {
                 className="mt-4 w-full bg-green-500 text-white font-semibold
              py-2 px-4 rounded-xl shadow-md hover:bg-green-600 active:scale-95 transition-all duration-200 "
                 onClick={sendOtp}
+                disabled={loading}
               >
-                Mark As Delivered
+                {loading ? (
+                  <ClockLoader size={20} color="white" />
+                ) : (
+                  "Mark As Delivered"
+                )}
               </button>
             ) : (
               // otp verification box

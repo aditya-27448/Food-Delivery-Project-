@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FaLocationDot, FaPlus } from "react-icons/fa6";
 import { LuReceiptIndianRupee } from "react-icons/lu";
 import { FaSearch, FaShoppingCart } from "react-icons/fa";
@@ -149,9 +149,6 @@ function Nav() {
             >
               <LuReceiptIndianRupee size={20} />
               <span>My Orders</span>
-              <span className="absolute -right-2 -top-2 text-xs font-bold text-white bg-[#ff4d2d] rounded-full px-[6px] py-[1px] ">
-                0
-              </span>
             </div>
             {/* mobile pending orders button (icon only) */}
             <div
@@ -159,9 +156,6 @@ function Nav() {
               onClick={() => navigate("/my-orders")}
             >
               <LuReceiptIndianRupee size={20} />
-              <span className="absolute -right-2 -top-2 text-xs font-bold text-white bg-[#ff4d2d] rounded-full px-[6px] py-[1px] ">
-                0
-              </span>
             </div>
           </>
         ) : (
