@@ -555,7 +555,7 @@ export const verifyDeliveyOtp = async (req, res) => {
 export const getTodayDeliveries = async (req, res) => {
   try {
     const deliveryBoyId = req.userId;
-    const startOfDay = new Date("2026-07-27");
+    const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
 
     const orders = await Order.find({

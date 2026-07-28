@@ -14,6 +14,7 @@ function DeliveryBoy() {
   const [availableAssignments, setAvailableAssignments] = useState([]);
   const [deliveryBoyLocation, setDeliveryBoyLocation] = useState(null);
   const [todayDeliveries, setTodayDeliveries] = useState([]);
+  const [orderDelivered, setOrderDelivered] = useState(false);
 
   useEffect(() => {
     if (!socket || userData.role !== "deliveryBoy") {
@@ -120,6 +121,7 @@ function DeliveryBoy() {
         },
         { withCredentials: true },
       );
+      setOrderDelivered(true);
       console.log("otp", result.data);
     } catch (error) {
       console.log("Accept order error", error);
@@ -136,6 +138,15 @@ function DeliveryBoy() {
     } catch (error) {
       console.log("fetch todays order error :", error);
     }
+  };
+
+  const handleBack = async () => {
+    setCurrentOrder(null);
+    setOtp("");
+    setShowOtpBox(false);
+    setOrderDelivered(false);
+
+    await getAssignment();
   };
 
   useEffect(() => {
@@ -234,7 +245,21 @@ function DeliveryBoy() {
                 },
               }}
             />
-            {!showOtpBox ? (
+            {orderDelivered ? (
+              <div className="mt-4 flex flex-col items-center gap-4">
+                <h1 className="text-2xl font-bold text-green-600">
+                  ✅ Order Delivered Successfully
+                </h1>
+
+                <button
+                  onClick={handleBack}
+                  className="bg-orange-500 text-white px-6 py-2 rounded-xl hover:bg-orange-600"
+                >
+                  Back
+                </button>
+              </div>
+            ) : !showOtpBox ? (
+              // mark as delivered button
               <button
                 className="mt-4 w-full bg-green-500 text-white font-semibold
              py-2 px-4 rounded-xl shadow-md hover:bg-green-600 active:scale-95 transition-all duration-200 "
@@ -243,6 +268,7 @@ function DeliveryBoy() {
                 Mark As Delivered
               </button>
             ) : (
+              // otp verification box
               <div className="mt-4 p-4 border rounded-xl bg-gray-50">
                 <p className="text-sm font-semibold mb-2">
                   Enter otp send to{" "}
