@@ -13,6 +13,7 @@ function DeliveryBoy() {
   const [otp, setOtp] = useState("");
   const [availableAssignments, setAvailableAssignments] = useState([]);
   const [deliveryBoyLocation, setDeliveryBoyLocation] = useState(null);
+  const [todayDeliveries, setTodayDeliveries] = useState([]);
 
   useEffect(() => {
     if (!socket || userData.role !== "deliveryBoy") {
@@ -74,7 +75,11 @@ function DeliveryBoy() {
       setCurrentOrder(result.data);
       // console.log(result.data);
     } catch (error) {
-      console.log(error);
+      if (error.response && error.response.status === 404) {
+        setCurrentOrder(null);
+      } else {
+        console.log(error);
+      }
     }
   };
 
@@ -120,6 +125,18 @@ function DeliveryBoy() {
       console.log("Accept order error", error);
     }
   };
+  const handleTodayDeliveries = async () => {
+    try {
+      const result = await axios.get(
+        `${serverURL}/api/order/get-today-deliveries`,
+        { withCredentials: true },
+      );
+      setTodayDeliveries(result.data);
+      console.log("Todays Deliveries", result.data);
+    } catch (error) {
+      console.log("fetch todays order error :", error);
+    }
+  };
 
   useEffect(() => {
     socket?.on("newAssignment", (data) => {
@@ -135,6 +152,7 @@ function DeliveryBoy() {
   useEffect(() => {
     getAssignment();
     getCurrentOrder();
+    handleTodayDeliveries();
   }, [userData]);
   return (
     <div className="w-screen min-h-screen flex flex-col gap-5 items-center bg-[#fff9f6] overflow-y-auto  ">

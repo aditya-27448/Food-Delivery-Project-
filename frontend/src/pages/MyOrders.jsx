@@ -5,11 +5,28 @@ import { useNavigate } from "react-router-dom";
 import OwnerOrderCard from "../components/OwnerOrderCard";
 import UserOrderCard from "../components/UserOrderCard";
 import { setMyOrders, updateRealtimeOrderStatus } from "../redux/userSlice";
+import axios from "axios";
+import { serverURL } from "../App";
 
 function MyOrders() {
   const { userData, myOrders, socket } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  // Fetch orders from API on mount so we always have fresh data
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const result = await axios.get(`${serverURL}/api/order/my-orders`, {
+          withCredentials: true,
+        });
+        dispatch(setMyOrders(result.data));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchOrders();
+  }, []);
 
   useEffect(() => {
     socket?.on("newOrder", (data) => {

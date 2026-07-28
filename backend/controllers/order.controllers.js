@@ -434,16 +434,16 @@ export const getCurrentOrder = async (req, res) => {
         populate: [{ path: "user", select: "fullName email location mobile" }],
       });
     if (!assignment) {
-      return res.status(400).json({ message: "assignment not found" });
+      return res.status(404).json({ message: "assignment not found" });
     }
     if (!assignment.order) {
-      return res.status(400).json({ message: "order not found" });
+      return res.status(404).json({ message: "order not found" });
     }
     const shopOrder = assignment.order.shopOrders.find(
       (so) => String(so._id) == String(assignment.shopOrderId),
     );
     if (!shopOrder) {
-      return res.status(400).json({ message: "shop order not found" });
+      return res.status(404).json({ message: "shop order not found" });
     }
 
     let deliveryBoyLocation = { lat: null, lon: null };
@@ -549,5 +549,55 @@ export const verifyDeliveyOtp = async (req, res) => {
     return res
       .status(500)
       .json({ message: `verify delivery otp error ${error}` });
+  }
+};
+
+export const getTodayDeliveries = async (req, res) => {
+  try {
+    const deliveryBoyId = req.userId;
+    const startOfDay = new Date("2026-07-27");
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const orders = await Order.find({
+      "shopOrders.assignedDeliveryBoy": deliveryBoyId,
+      "shopOrders.status": "delivered",
+      "shopOrders.deliveredAt": { $gte: startOfDay },
+    }).lean();
+
+    console.log(orders);
+
+    let todaysDeliveries = [];
+
+    orders.forEach((order) => {
+      order.shopOrders.forEach((shopOrder) => {
+        if (
+          shopOrder.assignedDeliveryBoy == deliveryBoyId &&
+          shopOrder.status == "delivered" &&
+          shopOrder.deliveredAt &&
+          shopOrder.deliveredAt >= startOfDay
+        ) {
+          todaysDeliveries.push(shopOrder);
+        }
+      });
+    });
+
+    let stats = {};
+
+    todaysDeliveries.forEach((shopOrder) => {
+      const hour = new Date(shopOrder.deliveredAt).getHours();
+      stats[hour] = (stats[hour] || 0) + 1;
+    });
+
+    let formattedStats = Object.keys(stats).map((hour) => ({
+      hour: parseInt(hour),
+      count: stats[hour],
+    }));
+
+    formattedStats.sort((a, b) => a.hour - b.hour);
+    return res.status(200).json(formattedStats);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: `fetching todays deliveries error ${error}` });
   }
 };
