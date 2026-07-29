@@ -24,7 +24,7 @@ import Shop from "./pages/Shop.jsx";
 import { setSocket } from "./redux/userSlice.js";
 import { io } from "socket.io-client";
 
-export const serverURL = "http://localhost:8000";
+export const serverURL = "https://food-delivery-project-uvdy.onrender.com";
 
 const ProtectedRoute = ({ children }) => {
   const { userData } = useSelector((state) => state.user);
