@@ -46,7 +46,7 @@ function MyOrders() {
   }, [socket, dispatch, userData?._id, myOrders]);
 
   return (
-    <div className="min-h-screen bg-[linear-gradient(135deg,#f8fafc_0%,#f0fdf4_100%)] px-4 py-24 text-slate-800">
+    <div className="min-h-screen bg-[linear-gradient(135deg,#f8fafc_0%,#f0fdf4_100%)] px-4 py-10 text-slate-800">
       <div className="mx-auto w-full max-w-6xl">
         <div className="mb-6 flex items-center gap-4">
           <div
