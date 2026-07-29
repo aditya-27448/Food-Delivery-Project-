@@ -13,7 +13,6 @@ function MyOrders() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // Fetch orders from API on mount so we always have fresh data
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -26,7 +25,7 @@ function MyOrders() {
       }
     };
     fetchOrders();
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     socket?.on("newOrder", (data) => {
@@ -44,28 +43,36 @@ function MyOrders() {
       socket?.off("newOrder");
       socket?.off("statusChange");
     };
-  }, [socket]);
+  }, [socket, dispatch, userData?._id, myOrders]);
 
   return (
-    <div className="w-full min-h-screen bg-[#fff9f6] flex justify-center px-4 ">
-      <div className="w-full max-w-200 p-4">
-        {/* Back Button */}
-        <div className="flex items-center gap-5 mb-6 ">
-          <div className="z-2.5" onClick={() => navigate("/")}>
-            <IoMdArrowRoundBack size={35} className="text-[#ff4d2d]" />
+    <div className="min-h-screen bg-[linear-gradient(135deg,#f8fafc_0%,#f0fdf4_100%)] px-4 py-24 text-slate-800">
+      <div className="mx-auto w-full max-w-6xl">
+        <div className="mb-6 flex items-center gap-4">
+          <div
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-emerald-100 bg-white/90 shadow-sm transition hover:scale-105 hover:shadow-md"
+            onClick={() => navigate("/")}
+          >
+            <IoMdArrowRoundBack size={24} className="text-emerald-600" />
           </div>
-          <h1 className="text-2xl font-bold text-start">My Orders</h1>
+          <h1 className="text-2xl font-bold text-slate-800">My Orders</h1>
         </div>
 
-        <div className="space-y-6">
-          {myOrders?.map((order, index) =>
-            userData.role == "user" ? (
-              <UserOrderCard data={order} key={index} />
-            ) : userData.role == "owner" ? (
-              <OwnerOrderCard data={order} key={index} />
-            ) : null,
-          )}
-        </div>
+        {myOrders?.length ? (
+          <div className="space-y-6">
+            {myOrders.map((order, index) =>
+              userData?.role === "user" ? (
+                <UserOrderCard data={order} key={index} />
+              ) : userData?.role === "owner" ? (
+                <OwnerOrderCard data={order} key={index} />
+              ) : null,
+            )}
+          </div>
+        ) : (
+          <div className="rounded-3xl border border-emerald-100 bg-white/95 p-8 text-center shadow-[0_10px_30px_rgba(16,185,129,0.08)]">
+            <p className="text-lg text-slate-600">No orders yet.</p>
+          </div>
+        )}
       </div>
     </div>
   );

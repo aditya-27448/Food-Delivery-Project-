@@ -78,7 +78,6 @@ function DeliveryBoy() {
         withCredentials: true,
       });
       setAvailableAssignments(result.data);
-      // console.log("hello", result.data);
     } catch (error) {
       console.log(error);
     }
@@ -91,7 +90,6 @@ function DeliveryBoy() {
         { withCredentials: true },
       );
       setCurrentOrder(result.data);
-      // console.log(result.data);
     } catch (error) {
       if (error.response && error.response.status === 404) {
         setCurrentOrder(null);
@@ -107,7 +105,6 @@ function DeliveryBoy() {
         `${serverURL}/api/order/accept-order/${assignmentId}`,
         { withCredentials: true },
       );
-      // console.log("Accept order status", result.data);
       await getCurrentOrder();
     } catch (error) {
       console.log("Accept order error", error);
@@ -130,6 +127,7 @@ function DeliveryBoy() {
       console.log("Accept order error", error);
     }
   };
+
   const verifyOtp = async () => {
     setMessage("");
     try {
@@ -149,6 +147,7 @@ function DeliveryBoy() {
       console.log("Accept order error", error);
     }
   };
+
   const handleTodayDeliveries = async () => {
     try {
       const result = await axios.get(
@@ -187,49 +186,53 @@ function DeliveryBoy() {
     getCurrentOrder();
     handleTodayDeliveries();
   }, [userData]);
+
   return (
-    <div className="w-screen min-h-screen flex flex-col gap-5 items-center bg-[#fff9f6] overflow-y-auto  ">
+    <div className="w-screen min-h-screen flex flex-col gap-5 items-center bg-[linear-gradient(135deg,#f8fafc_0%,#f0fdf4_100%)] overflow-y-auto">
       <Nav />
-      <div className="mt-20 w-full max-w-[800px] flex flex-col gap-5 items-center ">
-        <div className=" bg-white rounded-2xl shadow-md p-5 flex flex-col justify-start items-center w-[90%] border border-orange-100 text-center gap-2">
-          <h1 className="text-xl font-bold text-[#ff4d2d] ">
-            welcome, {userData.fullName}
+      <div className="mt-20 w-full max-w-[800px] flex flex-col gap-5 items-center">
+        <div className="bg-white rounded-2xl shadow-[0_10px_30px_rgba(16,185,129,0.08)] p-5 flex flex-col justify-start items-center w-[90%] border border-emerald-100 text-center gap-2">
+          <h1 className="text-xl font-bold text-emerald-600">
+            Welcome, {userData.fullName}
           </h1>
-          <p className="text-[#ff4d2d]">
-            <span className="font-semibold">Latitude:</span>
-            {deliveryBoyLocation?.lat ?? "Loading..."},
-            <span className="font-semibold"> Longitude:</span>
+          <p className="text-emerald-600">
+            <span className="font-semibold">Latitude:</span>{" "}
+            {deliveryBoyLocation?.lat ?? "Loading..."},{" "}
+            <span className="font-semibold">Longitude:</span>{" "}
             {deliveryBoyLocation?.lon ?? "Loading..."}
           </p>
         </div>
-        <div className="bg-white rounded-2xl shadow-md p-5 w-[90%] mb-6 border border-orange-100 ">
-          <h1 className="text-lg font-bold mb-3 text-[#ff4d2d]">
+
+        <div className="bg-white rounded-2xl shadow-[0_10px_30px_rgba(16,185,129,0.08)] p-5 w-[90%] mb-6 border border-emerald-100">
+          <h1 className="text-lg font-bold mb-3 text-emerald-600">
             Today Deliveries
           </h1>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={todayDeliveries}>
-              <CartesianGrid strokeDasharray="3 3" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
               <XAxis dataKey="hour" tickFormatter={(h) => `${h}:00`} />
               <YAxis allowDecimals={false} />
               <Tooltip
                 formatter={(value) => [value, "orders"]}
                 labelFormatter={(label) => `${label}:00`}
               />
-              <Bar dataKey="count" fill="#ff4d2d" />
+              <Bar dataKey="count" fill="#10B981" />
             </BarChart>
           </ResponsiveContainer>
-          <div className="max-w-sm mx-auto mt-6 p-6 bg-white rounded-2xl shadow-lg text-center">
-            <h1 className="text-xl font-semibold text-gray-800 mb-2">
+
+          <div className="max-w-sm mx-auto mt-6 p-6 bg-[linear-gradient(135deg,#f8fafc_0%,#f0fdf4_100%)] rounded-2xl shadow-sm text-center border border-emerald-100">
+            <h1 className="text-xl font-semibold text-slate-800 mb-2">
               Today's Earning
             </h1>
-            <span className="text-3xl font-bold text-green-600 ">
+            <span className="text-3xl font-bold text-emerald-600">
               ₹ {totalEarning}
             </span>
           </div>
         </div>
+
         {!currentOrder && (
-          <div className="bg-white rounded-2xl p-5 shadow-md w-[90%] border border-orange-100 ">
-            <h1 className=" text-lg font-bold mb-4 flex items-center gap-2 ">
+          <div className="bg-white rounded-2xl p-5 shadow-[0_10px_30px_rgba(16,185,129,0.08)] w-[90%] border border-emerald-100">
+            <h1 className="text-lg font-bold mb-4 flex items-center gap-2 text-slate-800">
               Available Orders
             </h1>
 
@@ -237,21 +240,23 @@ function DeliveryBoy() {
               {availableAssignments.length > 0 ? (
                 availableAssignments.map((a, index) => (
                   <div
-                    className="border rounded-lg p-4 flex justify-between items-center"
+                    className="border border-emerald-100 rounded-lg p-4 flex justify-between items-center bg-[linear-gradient(135deg,#f8fafc_0%,#f0fdf4_100%)]"
                     key={index}
                   >
                     <div>
-                      <p className="text-sm font-semibold">{a.shopName}</p>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm font-semibold text-slate-800">
+                        {a.shopName}
+                      </p>
+                      <p className="text-sm text-slate-600">
                         <span className="font-semibold">Delivery Address:</span>{" "}
                         {a.deliveryAddress.text}
                       </p>
-                      <p className="text-sm text-gray-400">
+                      <p className="text-sm text-slate-500">
                         {a.items.length} Items | {a.subtotal}
                       </p>
                     </div>
                     <button
-                      className="bg-orange-500 text-white px-4 py-1 rounded-lg text-sm hover:bg-orange-600"
+                      className="bg-gradient-to-r from-emerald-500 to-lime-500 text-white px-4 py-1 rounded-lg text-sm shadow-[0_8px_20px_rgba(16,185,129,0.25)] hover:shadow-[0_10px_24px_rgba(16,185,129,0.3)]"
                       onClick={() => acceptOrder(a.assignmentId)}
                     >
                       Accept
@@ -259,27 +264,30 @@ function DeliveryBoy() {
                   </div>
                 ))
               ) : (
-                <p className="text-gray-400 text-sm">No Available Orders</p>
+                <p className="text-slate-500 text-sm">No Available Orders</p>
               )}
             </div>
           </div>
         )}
 
         {currentOrder && (
-          <div className="bg-white rounded-2xl p-5 shadow-md w-[90%] border border-orange-100 ">
-            <h2 className="text-lg font-bold mb-3">📦Current Order</h2>
-            <div className="border rounded-lg p-4 mb-3">
-              <p className="font-semibold text-sm">
+          <div className="bg-white rounded-2xl p-5 shadow-[0_10px_30px_rgba(16,185,129,0.08)] w-[90%] border border-emerald-100">
+            <h2 className="text-lg font-bold mb-3 text-slate-800">
+              📦 Current Order
+            </h2>
+            <div className="border border-emerald-100 rounded-lg p-4 mb-3 bg-[linear-gradient(135deg,#f8fafc_0%,#f0fdf4_100%)]">
+              <p className="font-semibold text-sm text-slate-800">
                 {currentOrder?.shopOrder.shop.name}
               </p>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-slate-600">
                 {currentOrder?.deliveryAddress.text}
               </p>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-slate-500">
                 {currentOrder.shopOrder.shopOrderItems.length} items |{" "}
                 {currentOrder?.shopOrder.subtotal}
               </p>
             </div>
+
             <DeliveryBoyTracking
               data={{
                 deliveryBoyLocation: deliveryBoyLocation || {
@@ -292,24 +300,23 @@ function DeliveryBoy() {
                 },
               }}
             />
+
             {orderDelivered ? (
               <div className="mt-4 flex flex-col items-center gap-4">
-                <h1 className="text-2xl font-bold text-green-600">
+                <h1 className="text-2xl font-bold text-emerald-600">
                   ✅ Order Delivered Successfully
                 </h1>
 
                 <button
                   onClick={handleBack}
-                  className="bg-orange-500 text-white px-6 py-2 rounded-xl hover:bg-orange-600"
+                  className="bg-gradient-to-r from-emerald-500 to-lime-500 text-white px-6 py-2 rounded-xl shadow-[0_8px_20px_rgba(16,185,129,0.25)] hover:shadow-[0_10px_24px_rgba(16,185,129,0.3)]"
                 >
                   Back
                 </button>
               </div>
             ) : !showOtpBox ? (
-              // mark as delivered button
               <button
-                className="mt-4 w-full bg-green-500 text-white font-semibold
-             py-2 px-4 rounded-xl shadow-md hover:bg-green-600 active:scale-95 transition-all duration-200 "
+                className="mt-4 w-full bg-gradient-to-r from-emerald-500 to-lime-500 text-white font-semibold py-2 px-4 rounded-xl shadow-[0_8px_20px_rgba(16,185,129,0.25)] hover:shadow-[0_10px_24px_rgba(16,185,129,0.3)] active:scale-95 transition-all duration-200"
                 onClick={sendOtp}
                 disabled={loading}
               >
@@ -320,24 +327,22 @@ function DeliveryBoy() {
                 )}
               </button>
             ) : (
-              // otp verification box
-              <div className="mt-4 p-4 border rounded-xl bg-gray-50">
-                <p className="text-sm font-semibold mb-2">
-                  Enter otp send to{" "}
-                  <span className="text-orange-500">
+              <div className="mt-4 p-4 border border-emerald-100 rounded-xl bg-[linear-gradient(135deg,#f8fafc_0%,#f0fdf4_100%)]">
+                <p className="text-sm font-semibold mb-2 text-slate-800">
+                  Enter OTP sent to{" "}
+                  <span className="text-emerald-600">
                     {currentOrder.user.fullName}
                   </span>
                 </p>
                 <input
                   type="text"
                   placeholder="Enter OTP"
-                  className="w-full border px-3 py-2 rounded-lg mb-3 focus:outline-none focus:ring-2 focus:ring-orange-400"
+                  className="w-full border border-emerald-200 px-3 py-2 rounded-lg mb-3 focus:outline-none focus:ring-2 focus:ring-emerald-200 text-slate-700"
                   onChange={(e) => setOtp(e.target.value)}
                   value={otp}
                 />
                 <button
-                  className="w-full bg-orange-500 text-white
-             py-2 rounded-lg hover:bg-orange-600 transition-all "
+                  className="w-full bg-gradient-to-r from-emerald-500 to-lime-500 text-white py-2 rounded-lg shadow-[0_8px_20px_rgba(16,185,129,0.25)] hover:shadow-[0_10px_24px_rgba(16,185,129,0.3)] transition-all"
                   onClick={verifyOtp}
                 >
                   Submit OTP

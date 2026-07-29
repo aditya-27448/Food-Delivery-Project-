@@ -30,6 +30,7 @@ function Nav() {
       console.log(error);
     }
   };
+
   const handleSearchItems = async (query) => {
     try {
       const result = await axios.get(
@@ -52,175 +53,172 @@ function Nav() {
   }, [query]);
 
   return (
-    // main nav container - fixed at top, high z-index
-    <div className="w-full h-[80px] flex items-center justify-between md:justify-center gap-[30px] px-[20px] fixed top-0 z-[9999] bg-[#fff9f6] overflow-visible">
-      {/* mobile search dropdown - only for user role, shown when showSearch is true */}
-      {userData.role == "user" && showSearch && (
-        <div className="w-[90%] h-[70px] bg-white shadow-xl rounded-lg items-center gap-[20px] flex fixed top-[80px] left-[5%] md:hidden">
-          {/* location section */}
-          <div className="flex items-center w-[30%] overflow-hidden gap-[10px] px-[10px] border-r-[2px] border-gray-400">
-            <FaLocationDot size={25} className="text-[#ff4d2d]" />
-            <div className="w-[80%] truncate text-gray-600">{currentCity}</div>
-          </div>
-          {/* search input section */}
-          <div className="flex items-center w-[80%] gap-[10px]">
-            <FaSearch size={25} className="text-[#ff4d2d] " />
-            <input
-              type="text"
-              placeholder="Search delicious food..."
-              className="px-[10px] text-gray-700 outline-0 w-full"
-              onChange={(e) => setQuery(e.target.value)}
-              value={query}
-            />
-          </div>
-        </div>
-      )}
+    <div className="fixed top-0 left-0 right-0 z-[9999] h-[80px] border-b border-gray-200 bg-white shadow-[0_8px_25px_rgba(17,24,39,0.03)]">
+      <div className="mx-auto flex h-[80px] w-full max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
 
-      {/* brand logo */}
-      <h1 className="text-3xl font-bold md-2 text-[#ff4d2d]">Food Bus</h1>
-
-      {/* desktop searchbar - only for user role, hidden on mobile */}
-      {userData.role == "user" && (
-        <div className="md:w-[60%] lg:w-[40%] h-[70px] bg-white shadow-xl rounded-lg items-center gap-[20px] hidden md:flex">
-          {/* location section */}
-          <div className="flex items-center w-[30%] overflow-hidden gap-[10px] px-[10px] border-r-[2px] border-gray-400">
-            <FaLocationDot size={25} className="text-[#ff4d2d]" />
-            <div className="w-[80%] truncate text-gray-600">{currentCity}</div>
-          </div>
-          {/* search input section */}
-          <div className="flex items-center w-[80%] gap-[10px]">
-            <FaSearch size={25} className="text-[#ff4d2d] " />
-            <input
-              type="text"
-              placeholder="Search delicious food..."
-              className="px-[10px] text-gray-700 outline-0 w-full"
-              onChange={(e) => setQuery(e.target.value)}
-              value={query}
-            />
-          </div>
-        </div>
-      )}
-
-      {/* right side icons and buttons */}
-      <div className="flex items-center gap-4">
-        {/* mobile search toggle icon - only for user role */}
-        {userData.role == "user" &&
-          (showSearch ? (
-            // close icon when search is open
-            <ImCross
-              size={25}
-              className="text-[#ff4d2d] md:hidden"
-              onClick={() => setShowSearch(false)}
-            />
-          ) : (
-            // search icon when search is closed
-            <FaSearch
-              size={25}
-              className="text-[#ff4d2d] md:hidden"
-              onClick={() => setShowSearch(true)}
-            />
-          ))}
-
-        {/* role-based buttons */}
-        {userData.role == "owner" ? (
-          <>
-            {/* add food item button - only shown if shop exists */}
-            {myShopData && (
-              <>
-                {/* desktop add food button */}
-                <button
-                  className="hidden md:flex items-center gap-1 p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d]"
-                  onClick={() => navigate("/add-item")}
-                >
-                  <FaPlus size={20} />
-                  <span>Add Food Item</span>
-                </button>
-                {/* mobile add food button (icon only) */}
-                <button className="md:hidden flex items-center gap-1 p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d]">
-                  <FaPlus size={20} />
-                </button>
-              </>
-            )}
-
-            {/* desktop pending orders button */}
-            <div
-              className="hidden md:flex items-center gap-2 cursor-pointer relative px-3 py-1 rounded-lg font-medium bg-[#ff4d2d]/10 text-[#ff4d2d]"
-              onClick={() => navigate("/my-orders")}
-            >
-              <LuReceiptIndianRupee size={20} />
-              <span>My Orders</span>
-            </div>
-            {/* mobile pending orders button (icon only) */}
-            <div
-              className="md:hidden flex items-center gap-2 cursor-pointer relative px-3 py-1 rounded-lg font-medium bg-[#ff4d2d]/10 text-[#ff4d2d]"
-              onClick={() => navigate("/my-orders")}
-            >
-              <LuReceiptIndianRupee size={20} />
-            </div>
-          </>
-        ) : (
-          <>
-            {userData.role == "user" && (
-              <div
-                className="relative cursor-pointer"
-                onClick={() => navigate("/cart")}
-              >
-                <FaShoppingCart size={25} className="text-[#ff4d2d]" />
-                <span className="absolute right-[-9px] top-[-12px] text-[#ff4d2d]">
-                  {cartItems.length}
-                </span>
+        {userData.role === "user" && showSearch && (
+          <div className="fixed top-[80px] left-[5%] flex h-[70px] w-[90%] items-center gap-5 rounded-2xl border border-emerald-100 bg-white shadow-[0_10px_30px_rgba(16,185,129,0.10)] md:hidden">
+            <div className="flex w-[30%] items-center gap-2 overflow-hidden border-r border-gray-200 px-3">
+              <FaLocationDot size={25} className="text-emerald-600" />
+              <div className="w-[80%] truncate text-gray-600">
+                {currentCity}
               </div>
-            )}
-            {/* cart icon - for non-owner roles */}
+            </div>
 
-            {/* my orders button - hidden on mobile */}
-            <button
-              className="hidden md:block px-3 py-1 rounded-lg bg-[#ff4d2d]/10 text-[#ff4d2d] text-sm font-medium "
-              onClick={() => navigate("/my-orders")}
-            >
-              My Orders
-            </button>
-          </>
+            <div className="flex w-[70%] items-center gap-2 pr-3">
+              <FaSearch size={22} className="text-emerald-600" />
+              <input
+                type="text"
+                placeholder="Search delicious food..."
+                className="w-full bg-transparent text-gray-700 outline-none placeholder:text-gray-400"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+            </div>
+          </div>
         )}
 
-        {/* user avatar - shows first letter of name, toggles info dropdown */}
-        <div
-          className="w-[40px] h-[40px] rounded-full flex items-center justify-center bg-[#ff4d2d] text-white text-[18px] shadow-xl font-semibold cursor-pointer "
-          onClick={() => setShowInfo((prev) => !prev)}
-        >
-          {userData?.fullName.slice(0, 1)}
-        </div>
+        <h1 className="ml-1 whitespace-nowrap bg-gradient-to-r from-emerald-500 via-emerald-500 to-lime-500 bg-clip-text text-3xl font-black tracking-tight text-transparent">
+          Food Bus
+        </h1>
 
-        {/* user info dropdown */}
-        {showInfo && (
-          <div
-            className={`fixed top-[80px] right-[10px]
-          ${userData.role == "deliveryBoy" ? "md:right-[20%] lg:right-[40%]" : "md:right-[10%] lg:right-[25%]"}  w-[180px] bg-white shadow-2xl rounded-xl p-[20px] flex flex-col gap-[10px] z-[9999]`}
-          >
-            {/* user full name */}
-            <div className="text-[17px] font-semibold ">
-              {userData.fullName}
+        {userData.role === "user" ? (
+          <div className="hidden h-[56px] max-w-xl flex-1 items-center gap-4 rounded-2xl border border-gray-200 bg-white shadow-[0_10px_30px_rgba(16,185,129,0.08)] md:flex">
+            <div className="flex w-48 items-center gap-2 overflow-hidden border-r border-gray-200 px-4">
+              <FaLocationDot size={22} className="text-emerald-600" />
+              <div className="truncate text-gray-600">
+                {currentCity}
+              </div>
             </div>
 
-            {/* my orders - mobile only && owner only */}
-            {userData.role == "user" && (
-              <div
-                className="md:hidden text-[#ff4d2d] font-semibold cursor-pointer "
+            <div className="flex flex-1 items-center gap-2 pr-4">
+              <FaSearch size={20} className="text-emerald-600" />
+              <input
+                type="text"
+                placeholder="Search delicious food..."
+                className="w-full bg-transparent text-gray-700 outline-none placeholder:text-gray-400"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+            </div>
+          </div>
+        ) : (
+          <div className="hidden h-[56px] max-w-xl flex-1 md:block" />
+        )}
+
+        <div className="flex shrink-0 items-center gap-4">
+          {userData.role === "user" &&
+            (showSearch ? (
+              <ImCross
+                size={25}
+                className="cursor-pointer text-emerald-600 md:hidden"
+                onClick={() => setShowSearch(false)}
+              />
+            ) : (
+              <FaSearch
+                size={25}
+                className="cursor-pointer text-emerald-600 md:hidden"
+                onClick={() => setShowSearch(true)}
+              />
+            ))}
+
+          {userData.role === "owner" ? (
+            <>
+              {myShopData && (
+                <>
+                  <button
+                    className="hidden cursor-pointer items-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-lime-500 px-3 py-2 font-semibold text-white shadow-[0_8px_20px_rgba(16,185,129,0.25)] md:flex"
+                    onClick={() => navigate("/add-item")}
+                  >
+                    <FaPlus size={18} />
+                    <span>Add Food Item</span>
+                  </button>
+
+                  <button
+                    className="flex cursor-pointer items-center gap-1 rounded-full bg-gradient-to-r from-emerald-500 to-lime-500 p-2 text-white shadow-[0_8px_20px_rgba(16,185,129,0.25)] md:hidden"
+                    onClick={() => navigate("/add-item")}
+                  >
+                    <FaPlus size={18} />
+                  </button>
+                </>
+              )}
+
+              <button
+                className="hidden items-center gap-2 rounded-2xl border border-emerald-100 bg-emerald-50 px-3 py-2 font-medium text-emerald-600 md:flex"
+                onClick={() => navigate("/my-orders")}
+              >
+                <LuReceiptIndianRupee size={20} />
+                <span>My Orders</span>
+              </button>
+
+              <button
+                className="flex items-center rounded-2xl border border-emerald-100 bg-emerald-50 p-2 text-emerald-600 md:hidden"
+                onClick={() => navigate("/my-orders")}
+              >
+                <LuReceiptIndianRupee size={20} />
+              </button>
+            </>
+          ) : (
+            <>
+              {userData.role === "user" && (
+                <div
+                  className="relative cursor-pointer rounded-full border border-emerald-100 bg-emerald-50 p-2"
+                  onClick={() => navigate("/cart")}
+                >
+                  <FaShoppingCart size={24} className="text-emerald-600" />
+
+                  <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[11px] font-bold text-white">
+                    {cartItems.length}
+                  </span>
+                </div>
+              )}
+
+              <button
+                className="hidden rounded-2xl border border-emerald-100 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-600 md:block"
                 onClick={() => navigate("/my-orders")}
               >
                 My Orders
+              </button>
+            </>
+          )}
+
+          <div className="relative">
+            <div
+              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-lime-500 text-lg font-semibold text-white shadow-[0_8px_20px_rgba(16,185,129,0.25)]"
+              onClick={() => setShowInfo((prev) => !prev)}
+            >
+              {userData?.fullName?.charAt(0).toUpperCase()}
+            </div>
+
+            {showInfo && (
+              <div className="absolute right-0 top-[55px] z-[9999] flex w-[190px] flex-col gap-2 rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_18px_45px_rgba(16,185,129,0.12)]">
+                <div className="text-[17px] font-semibold text-gray-800">
+                  {userData.fullName}
+                </div>
+
+                {userData.role === "user" && (
+                  <div
+                    className="cursor-pointer font-semibold text-emerald-600 md:hidden"
+                    onClick={() => {
+                      navigate("/my-orders");
+                      setShowInfo(false);
+                    }}
+                  >
+                    My Orders
+                  </div>
+                )}
+
+                <div
+                  className="cursor-pointer font-semibold text-emerald-600"
+                  onClick={handleLogOut}
+                >
+                  Log Out
+                </div>
               </div>
             )}
-
-            {/* logout button */}
-            <div
-              className="text-[#ff4d2d] font-semibold cursor-pointer "
-              onClick={handleLogOut}
-            >
-              Log Out
-            </div>
           </div>
-        )}
+
+        </div>
       </div>
     </div>
   );

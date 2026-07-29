@@ -4,13 +4,12 @@ import { useSelector } from "react-redux";
 import UserDashboard from "../components/UserDashboard";
 import OwnerDashboard from "../components/OwnerDashboard";
 import DeliveryBoy from "../components/DeliveryBoy";
+
 function Home() {
   const { userData } = useSelector((state) => state.user);
-  console.log("userData:", userData);
-  console.log("role:", userData?.role);
-  console.log("isDeliveryBoy:", userData?.role === "deliveryBoy");
+
   return (
-    <div>
+    <div className="min-h-screen bg-[linear-gradient(135deg,#f8fafc_0%,#f0fdf4_100%)] text-slate-800">
       {userData?.role === "user" && <UserDashboard />}
       {userData?.role === "owner" && <OwnerDashboard />}
       {userData?.role === "deliveryBoy" && <DeliveryBoy />}

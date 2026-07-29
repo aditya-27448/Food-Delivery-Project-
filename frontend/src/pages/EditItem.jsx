@@ -10,7 +10,6 @@ import { ClipLoader } from "react-spinners";
 
 function EditItem() {
   const { itemId } = useParams();
-  //   console.log("itemId:", itemId);
   const navigate = useNavigate();
   const [currentItem, setCurrentItem] = useState(null);
   const { myShopData } = useSelector((state) => state.owner);
@@ -56,11 +55,13 @@ function EditItem() {
       if (backendImage) {
         formData.append("image", backendImage);
       }
+
       const result = await axios.post(
         `${serverURL}/api/item/edit-item/${itemId}`,
         formData,
         { withCredentials: true },
       );
+
       dispatch(setMyShopData(result.data));
       setLoading(false);
       navigate("/");
@@ -92,42 +93,48 @@ function EditItem() {
     setFoodType(currentItem?.foodType || "");
     setFrontendImage(currentItem?.image || "");
   }, [currentItem]);
+
   return (
-    <div className="flex justify-center flex-col items-center p-6 bg-linear-to-br from-orange-50 relative to-white min-h-screen">
+    <div className="relative flex min-h-screen flex-col items-center justify-center bg-[linear-gradient(135deg,#f8fafc_0%,#f0fdf4_100%)] px-4 py-8 sm:px-6 lg:px-8">
       <div
-        className="absolute top-5 left-5 z-2.5 mb-2.5"
+        className="absolute left-[20px] top-[20px] z-[10] mb-[10px] cursor-pointer"
         onClick={() => navigate("/")}
       >
-        <IoMdArrowRoundBack size={35} className="text-[#ff4d2d]" />
+        <IoMdArrowRoundBack size={35} className="text-emerald-600" />
       </div>
-      <div className="max-w-lg w-full bg-white shadow-xl rounded-2xl p-8 border border-orange-100">
-        <div className="flex flex-col items-center mb-6">
-          <div className="bg-orange-100 p-4 rounded-full mb-4">
-            <FaUtensils className="text-[#ff4d2d] w-16 h-16" />
+
+      <div className="w-full max-w-lg rounded-3xl border border-emerald-100 bg-white/95 p-8 shadow-[0_10px_30px_rgba(16,185,129,0.08)]">
+        <div className="mb-6 flex flex-col items-center">
+          <div className="mb-4 rounded-full bg-emerald-50 p-4">
+            <FaUtensils className="h-16 w-16 text-emerald-600" />
           </div>
-          <div className="text-3xl font-extrabold text-gray-900">Edit Food</div>
+          <div className="text-3xl font-extrabold text-slate-800">
+            Edit Food
+          </div>
         </div>
+
         <form className="space-y-5" onSubmit={handleSubmit}>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="mb-1 block text-sm font-medium text-slate-700">
               Name
             </label>
             <input
               type="text"
               placeholder="Enter Food Name"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full rounded-2xl border border-emerald-100 bg-white px-4 py-2.5 text-slate-700 shadow-sm transition focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
               onChange={(e) => setName(e.target.value)}
               value={name}
             />
           </div>
+
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="mb-1 block text-sm font-medium text-slate-700">
               Food Image
             </label>
             <input
               type="file"
               accept="image/*"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full rounded-2xl border border-emerald-100 bg-white px-4 py-2.5 text-slate-700 shadow-sm transition focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
               onChange={handleImage}
             />
             {frontendImage && (
@@ -135,28 +142,30 @@ function EditItem() {
                 <img
                   src={frontendImage}
                   alt=""
-                  className="w-full h-48 object-cover rounded-lg border"
+                  className="h-48 w-full rounded-2xl border border-emerald-100 object-cover"
                 />
               </div>
             )}
           </div>
+
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="mb-1 block text-sm font-medium text-slate-700">
               Price
             </label>
             <input
               type="number"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full rounded-2xl border border-emerald-100 bg-white px-4 py-2.5 text-slate-700 shadow-sm transition focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
               onChange={(e) => setPrice(e.target.value)}
               value={price}
             />
           </div>
+
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="mb-1 block text-sm font-medium text-slate-700">
               Select Category
             </label>
             <select
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full rounded-2xl border border-emerald-100 bg-white px-4 py-2.5 text-slate-700 shadow-sm transition focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
               onChange={(e) => setCategory(e.target.value)}
               value={category}
             >
@@ -168,12 +177,13 @@ function EditItem() {
               ))}
             </select>
           </div>
+
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="mb-1 block text-sm font-medium text-slate-700">
               Select Food Type
             </label>
             <select
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full rounded-2xl border border-emerald-100 bg-white px-4 py-2.5 text-slate-700 shadow-sm transition focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
               onChange={(e) => setFoodType(e.target.value)}
               value={foodType}
             >
@@ -183,7 +193,7 @@ function EditItem() {
           </div>
 
           <button
-            className="w-full bg-[#ff4d2d] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:bg-orange-600 hover:shadow-lg transition-all duration-200 cursor-pointer"
+            className="w-full cursor-pointer rounded-2xl bg-gradient-to-r from-emerald-500 to-lime-500 px-6 py-3 font-semibold text-white shadow-[0_8px_20px_rgba(16,185,129,0.25)] transition-all duration-200 hover:shadow-[0_10px_24px_rgba(16,185,129,0.3)]"
             disabled={loading}
           >
             {loading ? <ClipLoader size={20} color="white" /> : "Save"}

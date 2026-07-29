@@ -11,11 +11,6 @@ import { useDispatch } from "react-redux";
 import { setUserData } from "../redux/userSlice";
 
 function SignUp() {
-  const primaryColor = "#ff4d2d";
-  const hoverColor = "#e64323";
-  const bgColor = "#fff9f6";
-  const borderColor = "#ddd";
-
   const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState("user");
   const navigate = useNavigate();
@@ -26,7 +21,6 @@ function SignUp() {
   const [mobile, setMobile] = useState("");
 
   const [err, setErr] = useState("");
-
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
@@ -49,11 +43,10 @@ function SignUp() {
 
   const handleGoogleAuth = async () => {
     if (!mobile) {
-      return setErr("mobile number is required");
+      return setErr("Mobile number is required");
     }
 
     const provider = new GoogleAuthProvider();
-
     const result = await signInWithPopup(auth, provider);
 
     try {
@@ -72,43 +65,39 @@ function SignUp() {
       console.log(error);
     }
   };
+
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-4 bg-gray-800">
-      <div
-        className="bg-white rounded-xl shadow-lg w-full max-w-md p-8 border"
-        style={{ borderColor: borderColor }}
-      >
-        <h1 className="text-3xl font-bold mb-2" style={{ color: primaryColor }}>
+    <div className="flex min-h-screen w-full items-center justify-center bg-[linear-gradient(135deg,#f8fafc_0%,#f0fdf4_100%)] p-4">
+      <div className="w-full max-w-md rounded-3xl border border-emerald-100 bg-white/95 p-8 shadow-[0_10px_30px_rgba(16,185,129,0.08)]">
+        <h1 className="mb-2 text-3xl font-extrabold text-emerald-600">
           FOOD BUS
         </h1>
 
-        <p className="text-gray-600 mb-8">
-          Create your account to get started with delicious food deliveries
+        <p className="mb-8 text-sm text-slate-600">
+          Create your account to get started with delicious food deliveries.
         </p>
 
-        {/* fullName */}
         <div className="mb-4">
           <label
             htmlFor="fullName"
-            className="block text-gray-700 font-medium mb-1"
+            className="mb-1 block text-sm font-medium text-slate-700"
           >
             Full Name
           </label>
           <input
             type="text"
-            placeholder="Enter Fullname"
+            placeholder="Enter Full Name"
             required
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full rounded-2xl border border-emerald-100 bg-white px-3 py-2.5 text-slate-700 shadow-sm transition focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
             onChange={(e) => setFullName(e.target.value)}
             value={fullName}
           />
         </div>
 
-        {/* email */}
         <div className="mb-4">
           <label
             htmlFor="email"
-            className="block text-gray-700 font-medium mb-1"
+            className="mb-1 block text-sm font-medium text-slate-700"
           >
             Email
           </label>
@@ -116,17 +105,16 @@ function SignUp() {
             type="email"
             placeholder="Enter Email"
             required
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full rounded-2xl border border-emerald-100 bg-white px-3 py-2.5 text-slate-700 shadow-sm transition focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
             onChange={(e) => setEmail(e.target.value)}
             value={email}
           />
         </div>
 
-        {/* mobile number */}
         <div className="mb-4">
           <label
             htmlFor="mobile"
-            className="block text-gray-700 font-medium mb-1"
+            className="mb-1 block text-sm font-medium text-slate-700"
           >
             Mobile No
           </label>
@@ -134,17 +122,16 @@ function SignUp() {
             type="tel"
             placeholder="Enter Mobile Number"
             required
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full rounded-2xl border border-emerald-100 bg-white px-3 py-2.5 text-slate-700 shadow-sm transition focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
             onChange={(e) => setMobile(e.target.value)}
             value={mobile}
           />
         </div>
 
-        {/* Password */}
         <div className="mb-4">
           <label
             htmlFor="password"
-            className="block text-gray-700 font-medium mb-1"
+            className="mb-1 block text-sm font-medium text-slate-700"
           >
             Password
           </label>
@@ -153,14 +140,13 @@ function SignUp() {
               type={showPassword ? "text" : "password"}
               placeholder="Enter Password"
               required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-2xl border border-emerald-100 bg-white px-3 py-2.5 pr-10 text-slate-700 shadow-sm transition focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
               onChange={(e) => setPassword(e.target.value)}
               value={password}
             />
 
-            {/*EYE ICON */}
             <div
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer hover:text-gray-700"
+              className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-slate-400 transition hover:text-emerald-600"
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -168,27 +154,20 @@ function SignUp() {
           </div>
         </div>
 
-        {/* Role */}
         <div className="mb-4">
-          <label
-            htmlFor="password"
-            className="block text-gray-700 font-medium mb-1"
-          >
+          <label className="mb-1 block text-sm font-medium text-slate-700">
             Role
           </label>
           <div className="flex gap-2">
             {["user", "owner", "deliveryBoy"].map((r) => (
               <button
-                className="flex-1 border rounded-lg px-3 py-2 text-center font-medium transition-colors cursor-pointer"
+                key={r}
+                className={`flex-1 rounded-2xl border px-3 py-2 text-center text-sm font-medium transition ${
+                  role === r
+                    ? "border-emerald-500 bg-gradient-to-r from-emerald-500 to-lime-500 text-white shadow-[0_8px_20px_rgba(16,185,129,0.25)]"
+                    : "border-emerald-200 bg-white text-emerald-700 hover:bg-emerald-50"
+                }`}
                 onClick={() => setRole(r)}
-                style={
-                  role == r
-                    ? { backgroundColor: primaryColor, color: "white" }
-                    : {
-                        border: ` 1px solid ${primaryColor}`,
-                        color: primaryColor,
-                      }
-                }
               >
                 {r}
               </button>
@@ -197,28 +176,33 @@ function SignUp() {
         </div>
 
         <button
-          className="w-full mt-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-150 shadow-md hover:shadow-lg"
+          className="mt-2 w-full rounded-2xl bg-gradient-to-r from-emerald-500 to-lime-500 px-4 py-2.5 font-semibold text-white shadow-[0_8px_20px_rgba(16,185,129,0.25)] transition-all duration-150 hover:shadow-[0_10px_24px_rgba(16,185,129,0.3)]"
           onClick={handleSignUp}
           disabled={loading}
         >
           {loading ? <ClipLoader size={20} color="white" /> : "Sign Up"}
         </button>
 
-        {err && <p className="text-red-500 text-center">*{err}</p>}
+        {err && (
+          <p className="mt-3 text-center text-sm text-rose-500">*{err}</p>
+        )}
 
         <button
-          className="w-full mt-4 flex items-center justify-center gap-2 border py-2 px-4 rounded-lg transition-colors duration-150 border-gray-100 bg-gray-50 hover:bg-gray-100"
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-2.5 transition duration-150 hover:bg-emerald-100"
           onClick={handleGoogleAuth}
         >
           <FcGoogle size={20} />
-          <span>Sign Up with google</span>
+          <span className="font-medium text-slate-700">
+            Sign Up with Google
+          </span>
         </button>
+
         <p
-          className="text-center mt-6 cursor-pointer"
+          className="mt-6 cursor-pointer text-center text-sm text-slate-600"
           onClick={() => navigate("/signin")}
         >
-          Already have an account?
-          <span className="text-[#ff4d2d]">Sign In</span>
+          Already have an account?{" "}
+          <span className="font-semibold text-emerald-600">Sign In</span>
         </p>
       </div>
     </div>

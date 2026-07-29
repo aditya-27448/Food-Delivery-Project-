@@ -25,30 +25,32 @@ function OwnerOrderCard({ data }) {
       console.log(error.response?.data?.message);
     }
   };
-  // console.log(data.payment);
+
   return (
-    <div className="bg-white rounded-lg shadow space-y-4 p-4">
+    <div className="space-y-4 rounded-3xl border border-emerald-100 bg-white/95 p-4 shadow-[0_10px_30px_rgba(16,185,129,0.08)]">
       <div>
-        <h2 className="text-lg font-semibold text-gray-800">
+        <h2 className="text-lg font-semibold text-slate-800">
           {data.user.fullName}
         </h2>
-        <p className="text-sm text-gray-500">{data?.user?.email} </p>
-        <p className="flex items-center gap-2 text-sm text-gray-600 mt-1">
-          <FaMobileAlt /> <span>{data?.user?.mobile}</span>
+        <p className="text-sm text-slate-500">{data?.user?.email}</p>
+        <p className="mt-1 flex items-center gap-2 text-sm text-slate-600">
+          <FaMobileAlt className="text-emerald-600" />
+          <span>{data?.user?.mobile}</span>
         </p>
         {data.paymentMethod == "online" ? (
-          <p className="gap-2 text-sm text-gray-600">
+          <p className="text-sm text-slate-600">
             <span>Payment: </span>
             {data.payment ? "True" : "False"}
           </p>
         ) : (
-          <p className="gap-2 text-sm text-gray-600">
+          <p className="text-sm text-slate-600">
             <span>Payment Method: </span>
             {data.paymentMethod}
           </p>
         )}
       </div>
-      <div className="flex flex-col items-start gap-2 text-gray-600 text-sm">
+
+      <div className="flex flex-col items-start gap-2 text-sm text-slate-600">
         <p>{data?.deliveryAddress?.text}</p>
         <p>
           Lat: {data?.deliveryAddress?.latitude}, Lon:{" "}
@@ -60,31 +62,39 @@ function OwnerOrderCard({ data }) {
         {data.shopOrders.shopOrderItems.map((item, index) => (
           <div
             key={index}
-            className="shrink-0 w-40 border rounded-lg p-2 bg-white"
+            className="w-40 shrink-0 rounded-2xl border border-emerald-100 bg-[linear-gradient(135deg,#f8fafc_0%,#f0fdf4_100%)] p-2 shadow-sm"
           >
-            <img
-              src={item.item.image}
-              alt=""
-              className="w-full h-24 object-cover rounded"
-            />
-            <p className="text-sm font-semibold mt-1">{item.name}</p>
-            <hr />
-            <div className="flex justify-between">
-              <p className="text-xs text-gray-500 text-left">
-                Qty: {item.quantity} x ₹ {item.price}
-              </p>
-              <p className="text-xs text-gray-500 text-right">
-                ₹ {item.price * item.quantity}
-              </p>
-            </div>
+            {!item?.item ? (
+              <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-center text-red-500">
+                This food item has been removed.
+              </div>
+            ) :
+              <>
+                <img
+                  src={item.item.image}
+                  alt=""
+                  className="h-24 w-full rounded-xl object-cover"
+                />
+                <p className="mt-1 text-sm font-semibold text-slate-800">
+                  {item.name}
+                </p>
+                <div className="mt-2 flex justify-between">
+                  <p className="text-left text-xs text-slate-500">
+                    Qty: {item.quantity} x ₹ {item.price}
+                  </p>
+                  <p className="text-right text-xs text-slate-500">
+                    ₹ {item.price * item.quantity}
+                  </p>
+                </div>
+              </>}
           </div>
         ))}
       </div>
 
-      <div className="flex justify-between items-center mt-auto border-t border-gray-100">
-        <span className="text-sm">
+      <div className="mt-auto flex items-center justify-between border-t border-emerald-50 pt-3">
+        <span className="text-sm text-slate-700">
           Status:{" "}
-          <span className="font-semibold capitalize text-[#ff4d2d]">
+          <span className="font-semibold capitalize text-emerald-600">
             {data.shopOrders.status}
           </span>
         </span>
@@ -97,9 +107,9 @@ function OwnerOrderCard({ data }) {
               e.target.value,
             )
           }
-          className="rounded-md border px-3 py-1 text-sm focus:outline-none focus:ring-2 border-[#ff4d2d] text-[#ff4d2d]"
+          className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-sm text-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-200"
         >
-          <option value="">change</option>
+          <option value="">Change</option>
           <option value="pending">Pending</option>
           <option value="preparing">Preparing</option>
           <option value="out of delivery">Out For Delivery</option>
@@ -107,30 +117,32 @@ function OwnerOrderCard({ data }) {
       </div>
 
       {data.shopOrders.status == "out of delivery" && (
-        <div className="mt-3 p-2 border rounded-lg text-sm bg-orange-50">
+        <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-3 text-sm">
           {data.shopOrders.assignedDeliveryBoy ? (
-            <p>Assigned Delivery Boy: </p>
+            <p className="text-emerald-700">Assigned Delivery Boy:</p>
           ) : (
-            <p>Available Delivery Boys: </p>
+            <p className="text-emerald-700">Available Delivery Boys:</p>
           )}
           {(availableBoys?.length ?? 0) > 0 ? (
             availableBoys.map((b, index) => (
-              <div className=" text-gray-300" key={index}>
-                {b.fullName}-{b.mobile}
+              <div className="mt-1 text-slate-600" key={index}>
+                {b.fullName} - {b.mobile}
               </div>
             ))
           ) : data.shopOrders.assignedDeliveryBoy ? (
-            <div>
+            <div className="mt-1 text-slate-600">
               Name: {data.shopOrders.assignedDeliveryBoy.fullName} -{" "}
               {data.shopOrders.assignedDeliveryBoy.mobile}
             </div>
           ) : (
-            <div>Waiting for delivery boy to accept</div>
+            <div className="mt-1 text-slate-600">
+              Waiting for delivery boy to accept
+            </div>
           )}
         </div>
       )}
 
-      <div className="text-right font-bold text-gray-800 text-sm">
+      <div className="text-right text-sm font-bold text-slate-800">
         Total: ₹ {data.shopOrders.subtotal}
       </div>
     </div>

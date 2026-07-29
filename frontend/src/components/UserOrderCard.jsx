@@ -6,6 +6,7 @@ import { serverURL } from "../App";
 function UserOrderCard({ data }) {
   const navigate = useNavigate();
   const [selectedRating, setSelectedRating] = useState({}); //itemId:rating
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-Gb", {
@@ -33,89 +34,113 @@ function UserOrderCard({ data }) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow space-y-4 p-4">
-      <div className="flex justify-between border-b pb-2">
+    <div className="space-y-4 rounded-3xl border border-emerald-100 bg-white/95 p-4 shadow-[0_10px_30px_rgba(16,185,129,0.08)]">
+      <div className="flex justify-between border-b border-emerald-50 pb-3">
         <div>
-          <p className="font-semibold">
+          <p className="font-semibold text-slate-800">
             Order #{data?._id?.slice(-6) || "N/A"}
           </p>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-slate-500">
             Date: {formatDate(data.createdAt)}
           </p>
         </div>
+
         <div className="text-right">
           {data.paymentMethod == "cod" ? (
-            <p className="text-sm text-gray-500">
+            <p className="text-sm font-medium text-slate-500">
               {data.paymentMethod?.toUpperCase()}
             </p>
           ) : (
-            <p className="text-sm text-gray-500 font-semibold">
-              Payment : {data.payment ? "True" : "False"}
+            <p className="text-sm font-medium text-slate-500">
+              Payment: {data.payment ? "True" : "False"}
             </p>
           )}
 
-          <p className="font-medium text-blue-600">
+          <p className="font-semibold text-emerald-600">
             {data?.shopOrders?.[0]?.status}
           </p>
         </div>
       </div>
+
       {data.shopOrders.map((shopOrder, index) => (
         <div
-          className=" border rounded-lg p-3 space-y-3 bg-[#fffaf7] "
+          className="space-y-3 rounded-2xl border border-emerald-100 bg-[linear-gradient(135deg,#f8fafc_0%,#f0fdf4_100%)] p-3"
           key={index}
         >
-          <p>{shopOrder.shop.name}</p>
+          <p className="font-semibold text-slate-800">{shopOrder.shop.name}</p>
 
           <div className="flex space-x-4 overflow-x-auto pb-2">
             {shopOrder.shopOrderItems.map((item, index) => (
               <div
                 key={index}
-                className="shrink-0 w-40 border rounded-lg p-2 bg-white"
+                className="w-40 shrink-0 rounded-2xl border border-emerald-100 bg-white p-2 shadow-sm"
               >
-                <img
-                  src={item.item.image}
-                  alt=""
-                  className="w-full h-24 object-cover rounded"
-                />
-                <p className="text-sm font-semibold mt-1">{item.name}</p>
-                <hr />
-                <div className="flex justify-between">
-                  <p className="text-xs text-gray-500 text-left">
-                    Qty: {item.quantity} x ₹ {item.price}
-                  </p>
-                  <p className="text-xs text-gray-500 text-right">
-                    ₹ {item.price * item.quantity}
-                  </p>
+                {!item?.item ? (
+                  <div className="flex h-full min-h-40 items-center justify-center rounded-xl border border-red-200 bg-red-50 p-4 text-center text-sm font-medium text-red-500">
+                    This food item has been removed by the restaurant.
+                  </div>
+                ) : (
+                  <>
+                    <img
+                      src={item.item.image}
+                      alt={item.name}
+                      className="h-24 w-full rounded-xl object-cover"
+                    />
 
-                  {shopOrder.status == "delivered" && (
-                    <div className="flex space-x-1 mt-2">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <button
-                          className={`text-lg ${selectedRating[item.item._id] >= star ? "text-yellow-400" : "text-gray-400"}`}
-                          onClick={() => handleRating(item.item._id, star)}
-                        >
-                          ★
-                        </button>
-                      ))}
+                    <p className="mt-2 text-sm font-semibold text-slate-800">
+                      {item.name}
+                    </p>
+
+                    <div className="mt-2">
+                      <p className="text-xs text-slate-500">
+                        Qty: {item.quantity} × ₹ {item.price}
+                      </p>
+
+                      <p className="text-xs text-slate-500">
+                        ₹ {item.price * item.quantity}
+                      </p>
+
+                      {shopOrder.status === "delivered" && (
+                        <div className="mt-2 flex space-x-1">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <button
+                              key={star}
+                              type="button"
+                              className={`text-lg ${selectedRating[item.item._id] >= star
+                                  ? "text-emerald-500"
+                                  : "text-slate-300"
+                                }`}
+                              onClick={() => handleRating(item.item._id, star)}
+                            >
+                              ★
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
+                  </>
+                )}
               </div>
             ))}
           </div>
-          <div className="flex justify-between items-center border-t pt-2">
-            <p className="font-semibold">Subtotal: {shopOrder.subtotal}</p>
-            <span className="text-sm font-medium text-blue-600">
+
+          <div className="flex items-center justify-between border-t border-emerald-50 pt-2">
+            <p className="font-semibold text-slate-800">
+              Subtotal: ₹{shopOrder.subtotal}
+            </p>
+            <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-600">
               {shopOrder.status}
             </span>
           </div>
         </div>
       ))}
 
-      <div className="flex justify-between items-center bottom-t pt-2">
-        <p className="font-semibold">Total: ₹ {data.totalAmount}</p>
+      <div className="flex items-center justify-between border-t border-emerald-50 pt-2">
+        <p className="font-semibold text-slate-800">
+          Total: ₹ {data.totalAmount}
+        </p>
         <button
-          className="bg-[#ff4d2d] hover:bg-[#e64526] text-white px-4 py-2 rounded-lg text-sm"
+          className="rounded-xl bg-gradient-to-r from-emerald-500 to-lime-500 px-4 py-2 text-sm font-semibold text-white shadow-[0_8px_20px_rgba(16,185,129,0.25)]"
           onClick={() => navigate(`/track-order/${data._id}`)}
         >
           Track Order

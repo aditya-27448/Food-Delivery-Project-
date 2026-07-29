@@ -3,12 +3,9 @@ import Nav from "./Nav.jsx";
 import { categories } from "../category.js";
 import CategoryCard from "./CategoryCard.jsx";
 import { FaChevronCircleLeft, FaChevronCircleRight } from "react-icons/fa";
-import {} from "react-icons/fa";
 import { useSelector } from "react-redux";
 import FoodCard from "./FoodCard.jsx";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { serverURL } from "../App.jsx";
 
 function UserDashboard() {
   const cateScrollRef = useRef();
@@ -32,6 +29,7 @@ function UserDashboard() {
       setUpdatedItemsList(filteredList);
     }
   };
+
   useEffect(() => {
     setUpdatedItemsList(itemsInMyCity);
   }, [itemsInMyCity]);
@@ -86,14 +84,17 @@ function UserDashboard() {
         shopScrollRef.current.removeEventListener("scroll", shopScrollListener);
     };
   }, []);
+
   return (
-    <div className=" w-screen min-h-screen flex flex-col gap-5 items-center bg-[#fff9f6] overflow-y-auto pt-[100px]">
+    <div className="w-screen min-h-screen flex flex-col gap-5 items-center bg-[linear-gradient(135deg,#f8fafc_0%,#f0fdf4_100%)] overflow-y-auto pt-[100px] text-slate-800">
       <Nav />
+
       {searchItems && searchItems.length > 0 && (
-        <div className="w-full max-w-6xl flex flex-col gap-5 items-start p-5 bg-white shadow-md rounded-2xl mt-4">
-          <h1 className="text-gray-900 text-2xl sm:text-3xl font-semibold border-b border-gray-200 pb-2">
+        <div className="w-full max-w-6xl flex flex-col gap-5 items-start p-5 bg-white/90 shadow-[0_10px_30px_rgba(16,185,129,0.08)] rounded-3xl border border-emerald-100 mt-4">
+          <h1 className="inline-block border-b border-emerald-100 pb-2 text-2xl font-bold tracking-tight text-slate-800 after:mt-2 after:block after:h-1 after:w-full after:rounded-full after:bg-gradient-to-r after:from-emerald-500 after:to-lime-500 after:content-[''] sm:text-3xl">
             Search Result
           </h1>
+
           <div className="w-full h-auto grid grid-cols-1 gap-y-8 gap-x-0 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {searchItems.map((item) => (
               <FoodCard data={item} key={item._id} />
@@ -101,15 +102,15 @@ function UserDashboard() {
           </div>
         </div>
       )}
-      {/* Category */}
+
       <div className="w-full max-w-6xl flex flex-col gap-5 items-start p-2.5">
-        <h1 className=" text-gray-800 text-2xl sm:text-3xl ">
+        <h1 className="inline-block text-2xl font-bold tracking-tight text-slate-800 after:mt-2 after:block after:h-1 after:w-24 after:rounded-full after:bg-gradient-to-r after:from-emerald-500 after:to-lime-500 after:content-[''] sm:text-3xl">
           Inspiration for your first order
         </h1>
-        <div className=" w-full relative">
+        <div className="w-full relative">
           {showLeftCatButton && (
             <button
-              className="absolute left-0 top-1/2 -translate-y-1/2 bg-[#ff4d2d] text-white p-2 rounded-full shadow-lg hover:bg-[#e64528] z-10"
+              className="absolute left-0 top-1/2 -translate-y-1/2 bg-gradient-to-r from-emerald-500 to-lime-500 text-white p-2 rounded-full shadow-lg hover:shadow-[0_8px_20px_rgba(16,185,129,0.25)] z-10"
               onClick={() => scrollHandler(cateScrollRef, "left")}
             >
               <FaChevronCircleLeft />
@@ -117,7 +118,7 @@ function UserDashboard() {
           )}
 
           <div
-            className="w-full flex overflow-x-auto gap-4 pb-2 "
+            className="w-full flex overflow-x-auto gap-4 pb-2"
             ref={cateScrollRef}
           >
             {categories.map((cate, index) => (
@@ -129,9 +130,10 @@ function UserDashboard() {
               />
             ))}
           </div>
+
           {showRightCatButton && (
             <button
-              className="absolute right-0 top-1/2 -translate-y-1/2 bg-[#ff4d2d] text-white p-2 rounded-full shadow-lg hover:bg-[#e64528] z-10"
+              className="absolute right-0 top-1/2 -translate-y-1/2 bg-gradient-to-r from-emerald-500 to-lime-500 text-white p-2 rounded-full shadow-lg hover:shadow-[0_8px_20px_rgba(16,185,129,0.25)] z-10"
               onClick={() => scrollHandler(cateScrollRef, "right")}
             >
               <FaChevronCircleRight />
@@ -140,15 +142,14 @@ function UserDashboard() {
         </div>
       </div>
 
-      {/* Shop */}
       <div className="w-full max-w-6xl flex flex-col gap-5 items-start p-2.5">
-        <h1 className=" text-gray-800 text-2xl sm:text-3xl ">
+        <h1 className="inline-block text-2xl font-bold tracking-tight text-slate-800 after:mt-2 after:block after:h-1 after:w-24 after:rounded-full after:bg-gradient-to-r after:from-emerald-500 after:to-lime-500 after:content-[''] sm:text-3xl">
           Best Shop In {currentCity}
         </h1>
-        <div className=" w-full relative">
+        <div className="w-full relative">
           {showLeftShopButton && (
             <button
-              className="absolute left-0 top-1/2 -translate-y-1/2 bg-[#ff4d2d] text-white p-2 rounded-full shadow-lg hover:bg-[#e64528] z-10"
+              className="absolute left-0 top-1/2 -translate-y-1/2 bg-gradient-to-r from-emerald-500 to-lime-500 text-white p-2 rounded-full shadow-lg hover:shadow-[0_8px_20px_rgba(16,185,129,0.25)] z-10"
               onClick={() => scrollHandler(shopScrollRef, "left")}
             >
               <FaChevronCircleLeft />
@@ -156,7 +157,7 @@ function UserDashboard() {
           )}
 
           <div
-            className="w-full flex overflow-x-auto gap-4 pb-2 "
+            className="w-full flex overflow-x-auto gap-4 pb-2"
             ref={shopScrollRef}
           >
             {shopsInMyCity?.map((shop, index) => (
@@ -168,9 +169,10 @@ function UserDashboard() {
               />
             ))}
           </div>
+
           {showRightShopButton && (
             <button
-              className="absolute right-0 top-1/2 -translate-y-1/2 bg-[#ff4d2d] text-white p-2 rounded-full shadow-lg hover:bg-[#e64528] z-10"
+              className="absolute right-0 top-1/2 -translate-y-1/2 bg-gradient-to-r from-emerald-500 to-lime-500 text-white p-2 rounded-full shadow-lg hover:shadow-[0_8px_20px_rgba(16,185,129,0.25)] z-10"
               onClick={() => scrollHandler(shopScrollRef, "right")}
             >
               <FaChevronCircleRight />
@@ -179,13 +181,12 @@ function UserDashboard() {
         </div>
       </div>
 
-      {/* Items */}
       <div className="w-full max-w-6xl flex flex-col gap-5 items-start p-2.5">
-        <h1 className=" text-gray-800 text-2xl sm:text-3xl ">
-          Suggested Food Items {currentCity}
+        <h1 className="inline-block text-2xl font-bold tracking-tight text-slate-800 after:mt-2 after:block after:h-1 after:w-24 after:rounded-full after:bg-gradient-to-r after:from-emerald-500 after:to-lime-500 after:content-[''] sm:text-3xl">
+          Suggested Food Items In {currentCity}
         </h1>
 
-        <div className="w-full h-auto flex flex-wrap gap-5 justify-center ">
+        <div className="w-full h-auto grid grid-cols-1 gap-y-8 gap-x-0 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {updatedItemsList?.map((item, index) => (
             <FoodCard data={item} key={index} />
           ))}

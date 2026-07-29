@@ -7,20 +7,24 @@ import CartItemCard from "../components/CartItemCard";
 function CartPage() {
   const navigate = useNavigate();
   const { cartItems, totalAmount } = useSelector((state) => state.user);
+
   return (
-    <div className=" min-h-screen bg-[#fff9f6] flex justify-center p-6 ">
-      <div className="w-full max-w-200">
-        {/* Back icon(button) */}
-        <div className="flex items-center gap-5 mb-6 ">
-          <div className="z-2.5" onClick={() => navigate("/")}>
-            <IoMdArrowRoundBack size={35} className="text-[#ff4d2d]" />
+    <div className="min-h-screen bg-[linear-gradient(135deg,#f8fafc_0%,#f0fdf4_100%)] px-4 py-6 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full max-w-5xl">
+        <div className="mb-6 flex items-center gap-5">
+          <div
+            className="cursor-pointer rounded-full border border-emerald-100 bg-white/90 p-2 shadow-sm transition hover:shadow-md"
+            onClick={() => navigate("/")}
+          >
+            <IoMdArrowRoundBack size={28} className="text-emerald-600" />
           </div>
-          <h1 className="text-2xl font-bold text-start">Your Cart</h1>
+          <h1 className="text-2xl font-bold text-slate-800">Your Cart</h1>
         </div>
+
         {cartItems?.length == 0 ? (
-          <p className="text-gray-500 text-lg text-center">
-            Your Cart Is Empty
-          </p>
+          <div className="rounded-3xl border border-emerald-100 bg-white/95 p-8 text-center shadow-[0_10px_30px_rgba(16,185,129,0.08)]">
+            <p className="text-lg text-slate-600">Your Cart Is Empty</p>
+          </div>
         ) : (
           <>
             <div className="space-y-4">
@@ -28,18 +32,22 @@ function CartPage() {
                 <CartItemCard data={item} key={index} />
               ))}
             </div>
-            <div className="mt-6 bg-white p-4 rounded-xl shadow flex items-center justify-between border">
-              <h1 className="text-lg font-semibold ">Total Amount</h1>
-              <span className="text-xl font-bold text-[#ff4d2d]">
+
+            <div className="mt-6 flex items-center justify-between rounded-3xl border border-emerald-100 bg-white/95 p-4 shadow-[0_10px_30px_rgba(16,185,129,0.08)]">
+              <h1 className="text-lg font-semibold text-slate-800">
+                Total Amount
+              </h1>
+              <span className="text-xl font-bold text-emerald-600">
                 ₹ {totalAmount}
               </span>
             </div>
+
             <div className="mt-4 flex justify-end">
               <button
-                className="bg-[#ff4d2d] text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg[#e64526] transition "
+                className="rounded-2xl bg-gradient-to-r from-emerald-500 to-lime-500 px-6 py-3 text-lg font-semibold text-white shadow-[0_8px_20px_rgba(16,185,129,0.25)] transition hover:shadow-[0_10px_24px_rgba(16,185,129,0.3)]"
                 onClick={() => navigate("/checkout")}
               >
-                Proceed To CheckOut
+                Proceed To Checkout
               </button>
             </div>
           </>

@@ -23,13 +23,23 @@ import TrackOrderPage from "./pages/TrackOrderPage.jsx";
 import Shop from "./pages/Shop.jsx";
 import { setSocket } from "./redux/userSlice.js";
 import { io } from "socket.io-client";
-// import useGetCurrentUser from "./hooks/useGetCurrentUser.jsx";
 
 export const serverURL = "http://localhost:8000";
+
+const ProtectedRoute = ({ children }) => {
+  const { userData } = useSelector((state) => state.user);
+  return userData ? children : <Navigate to="/signin" replace />;
+};
+
+const PublicRoute = ({ children }) => {
+  const { userData } = useSelector((state) => state.user);
+  return !userData ? children : <Navigate to="/" replace />;
+};
 
 function App() {
   const { userData } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+
   useGetCurrentUser();
   useUpdateLocation();
   useGetCity();
@@ -41,74 +51,146 @@ function App() {
   useEffect(() => {
     const socketInstance = io(serverURL, { withCredentials: true });
     dispatch(setSocket(socketInstance));
-    socketInstance.on("connect", (socket) => {
-      if (userData) {
+
+    socketInstance.on("connect", () => {
+      if (userData?._id) {
         socketInstance.emit("identity", { userId: userData._id });
       }
     });
+
     return () => {
       socketInstance.disconnect();
     };
-  }, [userData?._id]);
+  }, [dispatch, userData?._id]);
 
   return (
     <Routes>
-      {/* this line redirects the page to signup page */}
-      {/* <Route path="/" element={<Navigate to="/signup" />} /> */}
-
-      {/* routes */}
-
       <Route
         path="/signup"
-        element={!userData ? <SignUp /> : <Navigate to={"/"} />}
+        element={
+          <PublicRoute>
+            <SignUp />
+          </PublicRoute>
+        }
       />
+
       <Route
         path="/signin"
-        element={!userData ? <SignIn /> : <Navigate to={"/"} />}
+        element={
+          <PublicRoute>
+            <SignIn />
+          </PublicRoute>
+        }
       />
+
       <Route
         path="/forgot-password"
-        element={!userData ? <ForgotPassword /> : <Navigate to={"/"} />}
+        element={
+          <PublicRoute>
+            <ForgotPassword />
+          </PublicRoute>
+        }
       />
+
       <Route
         path="/"
-        element={userData ? <Home /> : <Navigate to={"/signin"} />}
+        element={
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+        }
       />
+
       <Route
         path="/create-edit-shop"
-        element={userData ? <CreateEditShop /> : <Navigate to={"/signin"} />}
+        element={
+          <ProtectedRoute>
+            <CreateEditShop />
+          </ProtectedRoute>
+        }
       />
+
       <Route
         path="/add-item"
-        element={userData ? <AddItem /> : <Navigate to={"/signin"} />}
+        element={
+          <ProtectedRoute>
+            <AddItem />
+          </ProtectedRoute>
+        }
       />
+
       <Route
         path="/edit-item/:itemId"
-        element={userData ? <EditItem /> : <Navigate to={"/signin"} />}
+        element={
+          <ProtectedRoute>
+            <EditItem />
+          </ProtectedRoute>
+        }
       />
+
       <Route
         path="/cart"
-        element={userData ? <CartPage /> : <Navigate to={"/signin"} />}
+        element={
+          <ProtectedRoute>
+            <CartPage />
+          </ProtectedRoute>
+        }
       />
+
       <Route
         path="/checkout"
-        element={userData ? <CheckOut /> : <Navigate to={"/signin"} />}
+        element={
+          <ProtectedRoute>
+            <CheckOut />
+          </ProtectedRoute>
+        }
       />
+
       <Route
         path="/order-placed"
-        element={userData ? <OrderPlaced /> : <Navigate to={"/signin"} />}
+        element={
+          <ProtectedRoute>
+            <OrderPlaced />
+          </ProtectedRoute>
+        }
       />
+
       <Route
         path="/my-orders"
-        element={userData ? <MyOrders /> : <Navigate to={"/signin"} />}
+        element={
+          <ProtectedRoute>
+            <MyOrders />
+          </ProtectedRoute>
+        }
       />
+
       <Route
         path="/track-order/:orderId"
-        element={userData ? <TrackOrderPage /> : <Navigate to={"/signin"} />}
+        element={
+          <ProtectedRoute>
+            <TrackOrderPage />
+          </ProtectedRoute>
+        }
       />
+
       <Route
         path="/shop/:shopId"
-        element={userData ? <Shop /> : <Navigate to={"/signin"} />}
+        element={
+          <ProtectedRoute>
+            <Shop />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="*"
+        element={
+          userData ? (
+            <Navigate to="/" replace />
+          ) : (
+            <Navigate to="/signin" replace />
+          )
+        }
       />
     </Routes>
   );

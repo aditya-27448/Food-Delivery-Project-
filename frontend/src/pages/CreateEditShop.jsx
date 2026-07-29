@@ -76,43 +76,46 @@ function CreateEditShop() {
   };
 
   return (
-    <div className="flex justify-center flex-col items-center p-6 bg-gradient-to-br from-orange-50 relative to-white min-h-screen">
+    <div className="relative flex min-h-screen flex-col items-center justify-center bg-[linear-gradient(135deg,#f8fafc_0%,#f0fdf4_100%)] px-4 py-8 sm:px-6 lg:px-8">
       <div
-        className="absolute top-[20px] left-[20px] z-[10] mb-[10px]"
+        className="absolute left-[20px] top-[20px] z-[10] mb-[10px] cursor-pointer"
         onClick={() => navigate("/")}
       >
-        <IoMdArrowRoundBack size={35} className="text-[#ff4d2d]" />
+        <IoMdArrowRoundBack size={35} className="text-emerald-600" />
       </div>
-      <div className="max-w-lg w-full bg-white shadow-xl rounded-2xl p-8 border border-orange-100">
-        <div className="flex flex-col items-center mb-6">
-          <div className="bg-orange-100 p-4 rounded-full mb-4">
-            <FaUtensils className="text-[#ff4d2d] w-16 h-16" />
+
+      <div className="w-full max-w-lg rounded-3xl border border-emerald-100 bg-white/95 p-8 shadow-[0_10px_30px_rgba(16,185,129,0.08)]">
+        <div className="mb-6 flex flex-col items-center">
+          <div className="mb-4 rounded-full bg-emerald-50 p-4">
+            <FaUtensils className="h-16 w-16 text-emerald-600" />
           </div>
-          <div className="text-3xl font-extrabold text-gray-900">
+          <div className="text-3xl font-extrabold text-slate-800">
             {myShopData ? "Edit Shop" : "Add Shop"}
           </div>
         </div>
+
         <form className="space-y-5" onSubmit={handleSubmit}>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="mb-1 block text-sm font-medium text-slate-700">
               Name
             </label>
             <input
               type="text"
               placeholder="Enter Shop Name"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full rounded-2xl border border-emerald-100 bg-white px-4 py-2.5 text-slate-700 shadow-sm transition focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
               onChange={(e) => setName(e.target.value)}
               value={name}
             />
           </div>
+
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="mb-1 block text-sm font-medium text-slate-700">
               Shop Image
             </label>
             <input
               type="file"
               accept="image/*"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full rounded-2xl border border-emerald-100 bg-white px-4 py-2.5 text-slate-700 shadow-sm transition focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
               onChange={handleImage}
             />
             {frontendImage && (
@@ -120,51 +123,55 @@ function CreateEditShop() {
                 <img
                   src={frontendImage}
                   alt=""
-                  className="w-full h-48 object-cover rounded-lg border"
+                  className="h-48 w-full rounded-2xl border border-emerald-100 object-cover"
                 />
               </div>
             )}
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="mb-1 block text-sm font-medium text-slate-700">
                 City
               </label>
               <input
                 type="text"
                 placeholder="Enter City"
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full rounded-2xl border border-emerald-100 bg-white px-4 py-2.5 text-slate-700 shadow-sm transition focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
                 onChange={(e) => setCity(e.target.value)}
                 value={city}
               />
             </div>
+
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="mb-1 block text-sm font-medium text-slate-700">
                 State
               </label>
               <input
                 type="text"
                 placeholder="Enter State"
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full rounded-2xl border border-emerald-100 bg-white px-4 py-2.5 text-slate-700 shadow-sm transition focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
                 onChange={(e) => setShopState(e.target.value)}
                 value={shopState}
               />
             </div>
           </div>
+
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="mb-1 block text-sm font-medium text-slate-700">
               Address
             </label>
             <input
               type="text"
               placeholder="Enter shop address"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full rounded-2xl border border-emerald-100 bg-white px-4 py-2.5 text-slate-700 shadow-sm transition focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
               onChange={(e) => setAddress(e.target.value)}
               value={address}
             />
           </div>
+
           <button
-            className="w-full bg-[#ff4d2d] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:bg-orange-600 hover:shadow-lg transition-all duration-200 cursor-pointer"
+            className="w-full cursor-pointer rounded-2xl bg-gradient-to-r from-emerald-500 to-lime-500 px-6 py-3 font-semibold text-white shadow-[0_8px_20px_rgba(16,185,129,0.25)] transition-all duration-200 hover:shadow-[0_10px_24px_rgba(16,185,129,0.3)]"
             disabled={loading}
           >
             {loading ? <ClipLoader size={20} color="white" /> : "Save"}

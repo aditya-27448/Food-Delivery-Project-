@@ -16,6 +16,7 @@ const deliveryBoyIcon = new L.Icon({
   iconSize: [40, 40],
   iconAnchor: [20, 40],
 });
+
 const customerIcon = new L.Icon({
   iconUrl: home,
   iconSize: [40, 40],
@@ -23,27 +24,28 @@ const customerIcon = new L.Icon({
 });
 
 function DeliveryBoyTracking({ data }) {
-  const DeliveryBoyLat = data.deliveryBoyLocation.lat;
-  const DeliveryBoyLon = data.deliveryBoyLocation.lon;
+  const deliveryBoyLat = data.deliveryBoyLocation.lat;
+  const deliveryBoyLon = data.deliveryBoyLocation.lon;
 
   const customerLat = data.customerLocation.lat;
   const customerLon = data.customerLocation.lon;
 
   const path = [
-    [DeliveryBoyLat, DeliveryBoyLon],
+    [deliveryBoyLat, deliveryBoyLon],
     [customerLat, customerLon],
   ];
 
-  const center = [DeliveryBoyLat, DeliveryBoyLon];
+  const center = [deliveryBoyLat, deliveryBoyLon];
+
   return (
-    <div className="w-full h-[400px] mt-3 rounded-xl overflow-hidden shadow-md ">
-      <MapContainer className="w-full h-full" center={center} zoom={16}>
+    <div className="mt-3 h-[400px] w-full overflow-hidden rounded-3xl border border-emerald-100 bg-[linear-gradient(135deg,#f8fafc_0%,#f0fdf4_100%)] shadow-[0_10px_30px_rgba(16,185,129,0.08)]">
+      <MapContainer className="h-full w-full" center={center} zoom={16}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <Marker
-          position={[DeliveryBoyLat, DeliveryBoyLon]}
+          position={[deliveryBoyLat, deliveryBoyLon]}
           icon={deliveryBoyIcon}
         >
           <Popup>Delivery Boy</Popup>
@@ -51,7 +53,7 @@ function DeliveryBoyTracking({ data }) {
         <Marker position={[customerLat, customerLon]} icon={customerIcon}>
           <Popup>You</Popup>
         </Marker>
-        <Polyline positions={path} color="blue" weight={4} />
+        <Polyline positions={path} color="#10B981" weight={4} />
       </MapContainer>
     </div>
   );
