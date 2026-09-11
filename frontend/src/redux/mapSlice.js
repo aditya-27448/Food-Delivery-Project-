@@ -5,10 +5,10 @@ const mapSlice = createSlice({
   name: "user",
   initialState: {
     location: {
-      lat: null,
-      lon: null,
+      lat: 20.2961,
+      lon: 85.8245,
     },
-    address: null,
+    address: "Bhubaneswar, Odisha, India",
   },
   reducers: {
     setLocation: (state, action) => {

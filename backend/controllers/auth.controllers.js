@@ -64,15 +64,13 @@ export const signIn = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
 
-    // check if the user existed.
-    if (!user) {
-      return res.status(400).json({ message: "User does not exist." });
-    }
-
-    // matching the password.
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = user?.password
+      ? await bcrypt.compare(password, user.password)
+      : false;
     if (!isMatch) {
-      return res.status(400).json({ message: "Incorrect password" });
+      return res
+        .status(400)
+        .json({ message: "Username or password is incorrect." });
     }
 
     const token = await genToken(user._id);
@@ -159,6 +157,10 @@ export const googleAuth = async (req, res) => {
     let user = await User.findOne({ email });
     if (!user) {
       user = await User.create({ fullName, email, mobile, role });
+    } else if (mobile && !user.mobile) {
+      // Update mobile if user exists but doesn't have one yet
+      user.mobile = mobile;
+      await user.save();
     }
     const token = await genToken(user._id);
 
@@ -172,5 +174,20 @@ export const googleAuth = async (req, res) => {
     return res.status(201).json(user);
   } catch (error) {
     return res.status(500).json({ message: `Google Auth error ${error}` });
+  }
+};
+
+export const checkUser = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+    const user = await User.findOne({ email });
+    return res
+      .status(200)
+      .json({ exists: !!user, hasMobile: !!(user && user.mobile) });
+  } catch (error) {
+    return res.status(500).json({ message: `Check user error ${error}` });
   }
 };

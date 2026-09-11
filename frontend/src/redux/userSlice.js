@@ -5,9 +5,9 @@ const userSlice = createSlice({
   name: "user",
   initialState: {
     userData: null,
-    currentCity: null,
-    currentState: null,
-    currentAddress: null,
+    currentCity: "Bhubaneswar",
+    currentState: "Odisha",
+    currentAddress: "Bhubaneswar, Odisha, India",
     shopsInMyCity: null,
     itemsInMyCity: null,
     cartItems: [],

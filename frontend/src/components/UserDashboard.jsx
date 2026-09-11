@@ -6,13 +6,14 @@ import { FaChevronCircleLeft, FaChevronCircleRight } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import FoodCard from "./FoodCard.jsx";
 import { useNavigate } from "react-router-dom";
+import MobileModal from "./modals/MobileModal.jsx";
 
 function UserDashboard() {
   const cateScrollRef = useRef();
   const navigate = useNavigate();
   const [showLeftCatButton, setShowLeftCatButton] = useState(false);
   const [showRightCatButton, setShowRightCatButton] = useState(false);
-  const { currentCity, shopsInMyCity, itemsInMyCity, searchItems } =
+  const { currentCity, shopsInMyCity, itemsInMyCity, searchItems, userData } =
     useSelector((state) => state.user);
 
   const [showLeftShopButton, setShowLeftShopButton] = useState(false);
@@ -88,6 +89,9 @@ function UserDashboard() {
   return (
     <div className="w-screen min-h-screen flex flex-col gap-5 items-center bg-[linear-gradient(135deg,#f8fafc_0%,#f0fdf4_100%)] overflow-y-auto pt-[100px] text-slate-800">
       <Nav />
+
+      {/* Show mobile number modal if user doesn't have one */}
+      {userData && !userData.mobile && <MobileModal />}
 
       {searchItems && searchItems.length > 0 && (
         <div className="w-full max-w-6xl flex flex-col gap-5 items-start p-5 bg-white/90 shadow-[0_10px_30px_rgba(16,185,129,0.08)] rounded-3xl border border-emerald-100 mt-4">

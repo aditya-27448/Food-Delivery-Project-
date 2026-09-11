@@ -42,3 +42,27 @@ export const updateUserLocation = async (req, res) => {
       .json({ message: `update location user error${error}` });
   }
 };
+
+export const updateMobile = async (req, res) => {
+  try {
+    const { mobile } = req.body;
+    if (!mobile || mobile.length < 10) {
+      return res
+        .status(400)
+        .json({ message: "A valid 10-digit mobile number is required" });
+    }
+    const user = await User.findByIdAndUpdate(
+      req.userId,
+      { mobile },
+      { new: true },
+    );
+    if (!user) {
+      return res.status(400).json({ message: "user not found" });
+    }
+    return res.status(200).json(user);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: `update mobile error ${error}` });
+  }
+};

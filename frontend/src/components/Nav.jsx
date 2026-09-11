@@ -9,6 +9,8 @@ import { serverURL } from "../App";
 import { setSearchItems, setUserData } from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
 
+import LocationModal from "./modals/LocationModal.jsx";
+
 function Nav() {
   const { userData, currentCity, cartItems } = useSelector(
     (state) => state.user,
@@ -16,9 +18,17 @@ function Nav() {
   const { myShopData } = useSelector((state) => state.owner);
   const [showInfo, setShowInfo] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [query, setQuery] = useState("");
+
+  useEffect(() => {
+    const asked = localStorage.getItem("locationPermissionAsked");
+    if (!asked && userData?.role === "user") {
+      setIsLocationModalOpen(true);
+    }
+  }, [userData?.role]);
 
   const handleLogOut = async () => {
     try {
@@ -55,18 +65,21 @@ function Nav() {
   return (
     <div className="fixed top-0 left-0 right-0 z-[9999] h-[80px] border-b border-gray-200 bg-white shadow-[0_8px_25px_rgba(17,24,39,0.03)]">
       <div className="mx-auto flex h-[80px] w-full max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
-
         {userData.role === "user" && showSearch && (
           <div className="fixed top-[80px] left-[5%] flex h-[70px] w-[90%] items-center gap-5 rounded-2xl border border-emerald-100 bg-white shadow-[0_10px_30px_rgba(16,185,129,0.10)] md:hidden">
-            <div className="flex w-[30%] items-center gap-2 overflow-hidden border-r border-gray-200 px-3">
-              <FaLocationDot size={25} className="text-emerald-600" />
-              <div className="w-[80%] truncate text-gray-600">
+            <div
+              className="flex w-[35%] cursor-pointer items-center gap-2 overflow-hidden border-r border-gray-200 px-3 hover:bg-emerald-50/50 transition rounded-l-2xl"
+              onClick={() => setIsLocationModalOpen(true)}
+              title="Click to enable or change location"
+            >
+              <FaLocationDot size={25} className="text-emerald-600 shrink-0" />
+              <div className="w-[80%] truncate text-gray-700 font-medium">
                 {currentCity}
               </div>
             </div>
 
-            <div className="flex w-[70%] items-center gap-2 pr-3">
-              <FaSearch size={22} className="text-emerald-600" />
+            <div className="flex w-[65%] items-center gap-2 pr-3">
+              <FaSearch size={22} className="text-emerald-600 shrink-0" />
               <input
                 type="text"
                 placeholder="Search delicious food..."
@@ -84,9 +97,16 @@ function Nav() {
 
         {userData.role === "user" ? (
           <div className="hidden h-[56px] max-w-xl flex-1 items-center gap-4 rounded-2xl border border-gray-200 bg-white shadow-[0_10px_30px_rgba(16,185,129,0.08)] md:flex">
-            <div className="flex w-48 items-center gap-2 overflow-hidden border-r border-gray-200 px-4">
-              <FaLocationDot size={22} className="text-emerald-600" />
-              <div className="truncate text-gray-600">
+            <div
+              className="flex w-48 cursor-pointer items-center gap-2 overflow-hidden border-r border-gray-200 px-4 py-2 hover:bg-emerald-50/60 transition rounded-l-2xl group"
+              onClick={() => setIsLocationModalOpen(true)}
+              title="Click to enable or change location"
+            >
+              <FaLocationDot
+                size={22}
+                className="text-emerald-600 shrink-0 group-hover:scale-110 transition-transform"
+              />
+              <div className="truncate text-gray-700 font-medium group-hover:text-emerald-700">
                 {currentCity}
               </div>
             </div>
@@ -217,9 +237,13 @@ function Nav() {
               </div>
             )}
           </div>
-
         </div>
       </div>
+
+      <LocationModal
+        isOpen={isLocationModalOpen}
+        onClose={() => setIsLocationModalOpen(false)}
+      />
     </div>
   );
 }
