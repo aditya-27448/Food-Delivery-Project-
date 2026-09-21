@@ -1,14 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { update } from "firebase/database";
 
+const savedLat = localStorage.getItem("defaultLat");
+const savedLon = localStorage.getItem("defaultLon");
+const savedAddress = localStorage.getItem("defaultAddress");
+
 const mapSlice = createSlice({
-  name: "user",
+  name: "map",
   initialState: {
     location: {
-      lat: 20.2961,
-      lon: 85.8245,
+      lat: savedLat ? parseFloat(savedLat) : 20.2961,
+      lon: savedLon ? parseFloat(savedLon) : 85.8245,
     },
-    address: "Bhubaneswar, Odisha, India",
+    address: savedAddress || "Bhubaneswar, Odisha, India",
   },
   reducers: {
     setLocation: (state, action) => {

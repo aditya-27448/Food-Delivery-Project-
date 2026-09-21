@@ -9,6 +9,7 @@ import { auth } from "../../firebase";
 import { ClipLoader } from "react-spinners";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../redux/userSlice";
+import { showError } from "../utils/toast.js";
 
 function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
@@ -25,6 +26,10 @@ function SignUp() {
   const dispatch = useDispatch();
 
   const handleSignUp = async () => {
+    if (!fullName.trim()) return showError("Full name is required");
+    if (!email.trim()) return showError("Email is required");
+    if (!password) return showError("Password is required");
+    if (!mobile.trim()) return showError("Mobile number is required");
     setLoading(true);
     try {
       const result = await axios.post(
@@ -36,7 +41,9 @@ function SignUp() {
       setErr("");
       setLoading(false);
     } catch (error) {
-      setErr(error?.response?.data?.message);
+      const message = error?.response?.data?.message || "Sign up failed";
+      setErr(message);
+      showError(message);
       setLoading(false);
     }
   };
@@ -58,7 +65,7 @@ function SignUp() {
       );
       dispatch(setUserData(data));
     } catch (error) {
-      console.log(error);
+      showError(error?.response?.data?.message || "Google sign up failed");
     }
   };
 

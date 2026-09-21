@@ -204,7 +204,7 @@ export const getMyOrders = async (req, res) => {
         paymentMethod: order.paymentMethod,
         user: order.user,
         shopOrders: order.shopOrders.find(
-          (o) => o.owner._id.toString() === req.userId,
+          (o) => o.owner.toString() === req.userId,
         ),
         deliveryAddress: order.deliveryAddress,
         payment: order.payment,
@@ -246,7 +246,7 @@ export const updateOrderStatus = async (req, res) => {
               type: "Point",
               coordinates: [Number(longitude), Number(latitude)],
             },
-            $maxDistance: 5000, //written in meters
+            $maxDistance: 10000, // written in meters
           },
         },
       });
@@ -328,13 +328,13 @@ export const updateOrderStatus = async (req, res) => {
 
     const io = req.app.get("io");
     if (io) {
-      const userSocketId = order.user.socketId;
+      const userSocketId = order.user?.socketId;
       if (userSocketId) {
         io.to(userSocketId).emit("statusChange", {
           orderId: order._id,
           shopId: updatedShopOrder._id,
           status: updatedShopOrder.status,
-          userId: order.user._id,
+          userId: order.user?._id,
         });
       }
     }
@@ -555,7 +555,7 @@ export const verifyDeliveyOtp = async (req, res) => {
 export const getTodayDeliveries = async (req, res) => {
   try {
     const deliveryBoyId = req.userId;
-    const startOfDay = new Date("2026 07 28");
+    const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
 
     const orders = await Order.find({
@@ -563,8 +563,6 @@ export const getTodayDeliveries = async (req, res) => {
       "shopOrders.status": "delivered",
       "shopOrders.deliveredAt": { $gte: startOfDay },
     }).lean();
-
-    console.log(orders);
 
     let todaysDeliveries = [];
 

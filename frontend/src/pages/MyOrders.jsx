@@ -25,6 +25,9 @@ function MyOrders() {
       }
     };
     fetchOrders();
+
+    const refreshInterval = setInterval(fetchOrders, 5000);
+    return () => clearInterval(refreshInterval);
   }, [dispatch]);
 
   useEffect(() => {
@@ -46,20 +49,22 @@ function MyOrders() {
   }, [socket, dispatch, userData?._id, myOrders]);
 
   return (
-    <div className="min-h-screen bg-[linear-gradient(135deg,#f8fafc_0%,#f0fdf4_100%)] px-4 py-10 text-slate-800">
+    <div className="min-h-screen bg-[linear-gradient(135deg,#f8fafc_0%,#f0fdf4_100%)] px-3 py-6 sm:px-6 sm:py-10 text-slate-800">
       <div className="mx-auto w-full max-w-6xl">
-        <div className="mb-6 flex items-center gap-4">
+        <div className="mb-4 sm:mb-6 flex items-center gap-3 sm:gap-4">
           <div
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-emerald-100 bg-white/90 shadow-sm transition hover:scale-105 hover:shadow-md"
+            className="flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-full border border-emerald-100 bg-white/90 shadow-sm transition hover:scale-105 hover:shadow-md cursor-pointer"
             onClick={() => navigate("/")}
           >
-            <IoMdArrowRoundBack size={24} className="text-emerald-600" />
+            <IoMdArrowRoundBack className="text-emerald-600 text-lg sm:text-2xl" />
           </div>
-          <h1 className="text-2xl font-bold text-slate-800">My Orders</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-800">
+            My Orders
+          </h1>
         </div>
 
         {myOrders?.length ? (
-          <div className="space-y-6">
+          <div className="space-y-3.5 sm:space-y-6">
             {myOrders.map((order, index) =>
               userData?.role === "user" ? (
                 <UserOrderCard data={order} key={index} />
@@ -69,8 +74,8 @@ function MyOrders() {
             )}
           </div>
         ) : (
-          <div className="rounded-3xl border border-emerald-100 bg-white/95 p-8 text-center shadow-[0_10px_30px_rgba(16,185,129,0.08)]">
-            <p className="text-lg text-slate-600">No orders yet.</p>
+          <div className="rounded-2xl sm:rounded-3xl border border-emerald-100 bg-white/95 p-6 sm:p-8 text-center shadow-[0_10px_30px_rgba(16,185,129,0.08)]">
+            <p className="text-sm sm:text-lg text-slate-600">No orders yet.</p>
           </div>
         )}
       </div>

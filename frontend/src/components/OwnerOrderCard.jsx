@@ -27,72 +27,76 @@ function OwnerOrderCard({ data }) {
   };
 
   return (
-    <div className="space-y-4 rounded-3xl border border-emerald-100 bg-white/95 p-4 shadow-[0_10px_30px_rgba(16,185,129,0.08)]">
+    <div className="space-y-3 sm:space-y-4 rounded-2xl sm:rounded-3xl border border-emerald-100 bg-white/95 p-3.5 sm:p-5 shadow-[0_4px_16px_rgba(16,185,129,0.06)] sm:shadow-[0_10px_30px_rgba(16,185,129,0.08)]">
       <div>
-        <h2 className="text-lg font-semibold text-slate-800">
-          {data.user.fullName}
+        <h2 className="text-sm sm:text-lg font-semibold text-slate-800">
+          {data?.user?.fullName || "Customer unavailable"}
         </h2>
-        <p className="text-sm text-slate-500">{data?.user?.email}</p>
-        <p className="mt-1 flex items-center gap-2 text-sm text-slate-600">
-          <FaMobileAlt className="text-emerald-600" />
+        <p className="text-xs sm:text-sm text-slate-500">{data?.user?.email}</p>
+        <p className="mt-1 flex items-center gap-1.5 text-xs sm:text-sm text-slate-600">
+          <FaMobileAlt className="text-emerald-600 shrink-0" />
           <span>{data?.user?.mobile}</span>
         </p>
         {data.paymentMethod == "online" ? (
-          <p className="text-sm text-slate-600">
+          <p className="text-xs sm:text-sm text-slate-600">
             <span>Payment: </span>
             {data.payment ? "True" : "False"}
           </p>
         ) : (
-          <p className="text-sm text-slate-600">
+          <p className="text-xs sm:text-sm text-slate-600">
             <span>Payment Method: </span>
             {data.paymentMethod}
           </p>
         )}
       </div>
 
-      <div className="flex flex-col items-start gap-2 text-sm text-slate-600">
-        <p>{data?.deliveryAddress?.text}</p>
-        <p>
+      <div className="flex flex-col items-start gap-1 text-xs sm:text-sm text-slate-600">
+        <p className="line-clamp-2">{data?.deliveryAddress?.text}</p>
+        <p className="text-[10px] sm:text-xs text-slate-400">
           Lat: {data?.deliveryAddress?.latitude}, Lon:{" "}
           {data?.deliveryAddress?.longitude}
         </p>
       </div>
 
-      <div className="flex space-x-4 overflow-x-auto pb-2">
+      <div className="flex space-x-2.5 sm:space-x-4 overflow-x-auto pb-1.5 scrollbar-none">
         {data.shopOrders.shopOrderItems.map((item, index) => (
           <div
             key={index}
-            className="w-40 shrink-0 rounded-2xl border border-emerald-100 bg-[linear-gradient(135deg,#f8fafc_0%,#f0fdf4_100%)] p-2 shadow-sm"
+            className="w-32 sm:w-40 shrink-0 rounded-xl sm:rounded-2xl border border-emerald-100 bg-[linear-gradient(135deg,#f8fafc_0%,#f0fdf4_100%)] p-2 shadow-sm"
           >
             {!item?.item ? (
-              <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-center text-red-500">
+              <div className="rounded-lg border border-red-200 bg-red-50 p-2 text-center text-xs text-red-500">
                 This food item has been removed.
               </div>
-            ) :
+            ) : (
               <>
                 <img
                   src={item.item.image}
-                  alt=""
-                  className="h-24 w-full rounded-xl object-cover"
+                  alt={item.name}
+                  className="h-20 sm:h-24 w-full rounded-lg sm:rounded-xl object-cover"
                 />
-                <p className="mt-1 text-sm font-semibold text-slate-800">
+                <p
+                  className="mt-1 truncate text-xs sm:text-sm font-semibold text-slate-800"
+                  title={item.name}
+                >
                   {item.name}
                 </p>
-                <div className="mt-2 flex justify-between">
-                  <p className="text-left text-xs text-slate-500">
-                    Qty: {item.quantity} x ₹ {item.price}
+                <div className="mt-1.5 flex justify-between text-[10px] sm:text-xs text-slate-500">
+                  <p className="text-left">
+                    Qty: {item.quantity} x ₹{item.price}
                   </p>
-                  <p className="text-right text-xs text-slate-500">
-                    ₹ {item.price * item.quantity}
+                  <p className="text-right font-semibold text-slate-700">
+                    ₹{item.price * item.quantity}
                   </p>
                 </div>
-              </>}
+              </>
+            )}
           </div>
         ))}
       </div>
 
-      <div className="mt-auto flex items-center justify-between border-t border-emerald-50 pt-3">
-        <span className="text-sm text-slate-700">
+      <div className="mt-auto flex items-center justify-between border-t border-emerald-50 pt-2.5">
+        <span className="text-xs sm:text-sm text-slate-700">
           Status:{" "}
           <span className="font-semibold capitalize text-emerald-600">
             {data.shopOrders.status}
@@ -107,7 +111,7 @@ function OwnerOrderCard({ data }) {
               e.target.value,
             )
           }
-          className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-sm text-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-200"
+          className="rounded-lg sm:rounded-xl border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs sm:text-sm text-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-200"
         >
           <option value="">Change</option>
           <option value="pending">Pending</option>
@@ -117,11 +121,15 @@ function OwnerOrderCard({ data }) {
       </div>
 
       {data.shopOrders.status == "out of delivery" && (
-        <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-3 text-sm">
+        <div className="rounded-xl sm:rounded-2xl border border-emerald-100 bg-emerald-50 p-2.5 sm:p-3 text-xs sm:text-sm">
           {data.shopOrders.assignedDeliveryBoy ? (
-            <p className="text-emerald-700">Assigned Delivery Boy:</p>
+            <p className="font-semibold text-emerald-700">
+              Assigned Delivery Boy:
+            </p>
           ) : (
-            <p className="text-emerald-700">Available Delivery Boys:</p>
+            <p className="font-semibold text-emerald-700">
+              Available Delivery Boys:
+            </p>
           )}
           {(availableBoys?.length ?? 0) > 0 ? (
             availableBoys.map((b, index) => (
@@ -142,7 +150,7 @@ function OwnerOrderCard({ data }) {
         </div>
       )}
 
-      <div className="text-right text-sm font-bold text-slate-800">
+      <div className="text-right text-xs sm:text-sm font-bold text-slate-800">
         Total: ₹ {data.shopOrders.subtotal}
       </div>
     </div>

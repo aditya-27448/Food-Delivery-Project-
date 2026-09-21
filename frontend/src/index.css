@@ -9,3 +9,54 @@
 ::-webkit-scrollbar {
   display: none;
 }
+
+.food-bus-toast {
+  position: relative !important;
+  overflow: hidden !important;
+  min-width: 320px !important;
+  border: 1px solid rgba(167, 243, 208, 0.2) !important;
+  border-radius: 999px !important;
+  background: #123b35 !important;
+  box-shadow: 0 18px 45px rgba(6, 78, 59, 0.3) !important;
+  padding: 14px 46px 14px 20px !important;
+  color: #f0fdf4 !important;
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+}
+
+.food-bus-toast::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: linear-gradient(90deg, #34d399, #bef264);
+}
+
+.food-bus-toast-error::before {
+  background: linear-gradient(90deg, #fb7185, #fb923c);
+}
+
+.food-bus-toast-error {
+  border-color: rgba(254, 205, 211, 0.25) !important;
+  background: #4a2027 !important;
+  box-shadow: 0 18px 45px rgba(127, 29, 29, 0.28) !important;
+}
+
+.food-bus-toast button {
+  top: 50% !important;
+  right: 12px !important;
+  transform: translateY(-50%) !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #ecfdf5 !important;
+}
+
+@media (max-width: 640px) {
+  .food-bus-toast {
+    width: calc(100vw - 28px) !important;
+    min-width: 0 !important;
+    margin: 0 14px 12px !important;
+    border-radius: 20px !important;
+  }
+}

@@ -7,6 +7,7 @@ import axios from "axios";
 import { serverURL } from "../App";
 import { setMyShopData } from "../redux/ownerSlice";
 import { ClipLoader } from "react-spinners";
+import { showError } from "../utils/toast.js";
 
 function CreateEditShop() {
   const navigate = useNavigate();
@@ -43,12 +44,33 @@ function CreateEditShop() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
 
-    if (!backendImage && !myShopData?.image) {
-      alert("Please upload a shop image");
+    if (!name || !name.trim()) {
+      showError("Please enter shop name");
       return;
     }
+
+    if (!backendImage && !myShopData?.image) {
+      showError("Please upload a shop image");
+      return;
+    }
+
+    if (!city || !city.trim()) {
+      showError("Please enter city");
+      return;
+    }
+
+    if (!shopState || !shopState.trim()) {
+      showError("Please enter state");
+      return;
+    }
+
+    if (!address || !address.trim()) {
+      showError("Please enter shop address");
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const formData = new FormData();
@@ -70,8 +92,11 @@ function CreateEditShop() {
       setLoading(false);
       navigate("/");
     } catch (error) {
-      console.log(error);
       setLoading(false);
+      showError(
+        error?.response?.data?.message ||
+          "Failed to save shop. Please try again.",
+      );
     }
   };
 

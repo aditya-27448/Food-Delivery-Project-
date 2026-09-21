@@ -21,25 +21,60 @@ export const getCurrentUser = async (req, res) => {
 
 export const updateUserLocation = async (req, res) => {
   try {
-    const { lat, lon } = req.body;
+    const { lat, lon, address, city, state } = req.body;
+    const updateData = {
+      location: {
+        type: "Point",
+        coordinates: [lon, lat],
+      },
+    };
+    if (address) updateData.defaultAddress = address;
+    if (city) updateData.defaultCity = city;
+    if (state) updateData.defaultState = state;
+
     const user = await User.findByIdAndUpdate(
       req.userId,
-      {
-        location: {
-          type: "Point",
-          coordinates: [lon, lat],
-        },
-      },
+      updateData,
       { new: true },
     );
     if (!user) {
       return res.status(400).json({ message: "user not found" });
     }
-    return res.status(200).json({ message: "location updated" });
+    return res.status(200).json({ message: "location updated", user });
   } catch (error) {
     return res
       .status(500)
       .json({ message: `update location user error${error}` });
+  }
+};
+
+export const setDefaultAddress = async (req, res) => {
+  try {
+    const { address, city, state, lat, lon } = req.body;
+    const updateData = {};
+    if (address !== undefined) updateData.defaultAddress = address;
+    if (city !== undefined) updateData.defaultCity = city;
+    if (state !== undefined) updateData.defaultState = state;
+    if (lat !== undefined && lon !== undefined) {
+      updateData.location = {
+        type: "Point",
+        coordinates: [Number(lon), Number(lat)],
+      };
+    }
+
+    const user = await User.findByIdAndUpdate(req.userId, updateData, {
+      new: true,
+    });
+    if (!user) {
+      return res.status(404).json({ message: "user not found" });
+    }
+    return res
+      .status(200)
+      .json({ message: "default address set successfully", user });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: `set default address error: ${error}` });
   }
 };
 

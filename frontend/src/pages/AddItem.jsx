@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { IoMdArrowRoundBack } from "react-icons/io";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { FaUtensils } from "react-icons/fa";
 import axios from "axios";
 import { serverURL } from "../App";
 import { setMyShopData } from "../redux/ownerSlice";
 import { ClipLoader } from "react-spinners";
+import { showError } from "../utils/toast.js";
 
 function AddItem() {
   const navigate = useNavigate();
-  const { myShopData } = useSelector((state) => state.owner);
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -45,7 +45,7 @@ function AddItem() {
     setLoading(true);
 
     if (!backendImage) {
-      alert("Please upload a food image");
+      showError("Please upload a food image");
       setLoading(false);
       return;
     }
@@ -70,7 +70,7 @@ function AddItem() {
       setLoading(false);
       navigate("/");
     } catch (error) {
-      console.log(error);
+      showError(error?.response?.data?.message || "Failed to add food item");
       setLoading(false);
     }
   };

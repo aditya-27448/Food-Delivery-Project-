@@ -9,6 +9,7 @@ import { auth } from "../../firebase";
 import { ClipLoader } from "react-spinners";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../redux/userSlice";
+import { showError } from "../utils/toast.js";
 
 function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
@@ -21,6 +22,8 @@ function SignIn() {
   const dispatch = useDispatch();
 
   const handleSignIn = async () => {
+    if (!email.trim()) return showError("Email is required");
+    if (!password) return showError("Password is required");
     setLoading(true);
     try {
       const result = await axios.post(
@@ -32,7 +35,9 @@ function SignIn() {
       setErr("");
       setLoading(false);
     } catch (error) {
-      setErr(error?.response?.data?.message);
+      const message = error?.response?.data?.message || "Sign in failed";
+      setErr(message);
+      showError(message);
       setLoading(false);
     }
   };
@@ -53,7 +58,7 @@ function SignIn() {
       );
       dispatch(setUserData(data));
     } catch (error) {
-      console.log(error);
+      showError(error?.response?.data?.message || "Google sign in failed");
     }
   };
 

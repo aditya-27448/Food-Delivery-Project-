@@ -17,48 +17,48 @@ function CartItemCard({ data }) {
   };
 
   return (
-    <div className="flex items-center justify-between rounded-3xl border border-emerald-100 bg-white/95 p-4 shadow-[0_10px_30px_rgba(16,185,129,0.08)]">
-      <div className="flex items-center gap-4">
+    <div className="flex items-center justify-between rounded-2xl sm:rounded-3xl border border-emerald-100 bg-white/95 p-3 sm:p-4 shadow-[0_4px_16px_rgba(16,185,129,0.06)] sm:shadow-[0_10px_30px_rgba(16,185,129,0.08)] gap-2">
+      <div className="flex items-center gap-2.5 sm:gap-4 overflow-hidden">
         <img
           src={data.image}
-          alt=""
-          className="h-20 w-20 rounded-2xl border border-emerald-100 object-cover"
+          alt={data.name}
+          className="h-14 w-14 sm:h-20 sm:w-20 rounded-xl sm:rounded-2xl border border-emerald-100 object-cover shrink-0"
         />
-        <div>
-          <h1 className="font-semibold text-slate-800">{data.name}</h1>
-          <p className="text-sm text-slate-500">
-            {data.price} × {data.quantity}
+        <div className="min-w-0">
+          <h1 className="font-semibold text-xs sm:text-base text-slate-800 truncate">{data.name}</h1>
+          <p className="text-[11px] sm:text-sm text-slate-500">
+            ₹{data.price} × {data.quantity}
           </p>
-          <p className="font-bold text-emerald-600">
+          <p className="font-bold text-xs sm:text-base text-emerald-600">
             ₹ {data.price * data.quantity}
           </p>
         </div>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
         <button
-          className="rounded-full bg-emerald-50 p-2 text-emerald-600 transition hover:bg-emerald-100"
+          className="rounded-full bg-emerald-50 p-1.5 sm:p-2 text-emerald-600 transition hover:bg-emerald-100"
           onClick={() => handleDecrease(data.id, data.quantity)}
         >
-          <FaMinus size={12} />
+          <FaMinus className="text-[10px] sm:text-[12px]" />
         </button>
 
-        <span className="min-w-5 text-center font-semibold text-slate-700">
+        <span className="min-w-4 sm:min-w-5 text-center text-xs sm:text-base font-semibold text-slate-700">
           {data.quantity}
         </span>
 
         <button
-          className="rounded-full bg-emerald-50 p-2 text-emerald-600 transition hover:bg-emerald-100"
+          className="rounded-full bg-emerald-50 p-1.5 sm:p-2 text-emerald-600 transition hover:bg-emerald-100"
           onClick={() => handleIncrease(data.id, data.quantity)}
         >
-          <FaPlus size={12} />
+          <FaPlus className="text-[10px] sm:text-[12px]" />
         </button>
 
         <button
-          className="rounded-full bg-rose-50 p-2 text-rose-600 transition hover:bg-rose-100"
+          className="rounded-full bg-rose-50 p-1.5 sm:p-2 text-rose-600 transition hover:bg-rose-100 ml-0.5 sm:ml-1"
           onClick={() => dispatch(removeCartItem(data.id))}
         >
-          <FaTrashAlt size={16} />
+          <FaTrashAlt className="text-xs sm:text-base" />
         </button>
       </div>
     </div>

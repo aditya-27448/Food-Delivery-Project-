@@ -44,6 +44,15 @@ const userSchema = new mongoose.Schema(
         default: [0, 0],
       },
     },
+    defaultAddress: {
+      type: String,
+    },
+    defaultCity: {
+      type: String,
+    },
+    defaultState: {
+      type: String,
+    },
     socketId: {
       type: String,
     },

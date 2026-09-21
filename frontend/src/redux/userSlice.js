@@ -1,13 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { update } from "firebase/database";
+const savedDefaultAddress = "Bhubaneswar, Odisha, India";
+const savedDefaultCity = "Bhubaneswar";
+const savedDefaultState = "Odisha";
 
 const userSlice = createSlice({
   name: "user",
   initialState: {
     userData: null,
-    currentCity: "Bhubaneswar",
-    currentState: "Odisha",
-    currentAddress: "Bhubaneswar, Odisha, India",
+    defaultAddress: savedDefaultAddress,
+    defaultCity: savedDefaultCity,
+    defaultState: savedDefaultState,
+    currentCity: savedDefaultCity,
+    currentState: savedDefaultState,
+    currentAddress: savedDefaultAddress,
     shopsInMyCity: null,
     itemsInMyCity: null,
     cartItems: [],
@@ -19,6 +24,11 @@ const userSlice = createSlice({
   reducers: {
     setUserData: (state, action) => {
       state.userData = action.payload;
+      if (action.payload?.defaultAddress) {
+        state.currentAddress = action.payload.defaultAddress;
+        state.currentCity = action.payload.defaultCity || state.currentCity;
+        state.currentState = action.payload.defaultState || state.currentState;
+      }
     },
     setCurrentCity: (state, action) => {
       state.currentCity = action.payload;
@@ -28,6 +38,24 @@ const userSlice = createSlice({
     },
     setCurrentAddress: (state, action) => {
       state.currentAddress = action.payload;
+    },
+    setDefaultAddressState: (state, action) => {
+      const { address, city, state: st } = action.payload;
+      if (address) {
+        state.defaultAddress = address;
+        state.currentAddress = address;
+        localStorage.setItem("defaultAddress", address);
+      }
+      if (city) {
+        state.defaultCity = city;
+        state.currentCity = city;
+        localStorage.setItem("defaultCity", city);
+      }
+      if (st) {
+        state.defaultState = st;
+        state.currentState = st;
+        localStorage.setItem("defaultState", st);
+      }
     },
     setShopsInMyCity: (state, action) => {
       state.shopsInMyCity = action.payload;
@@ -112,6 +140,7 @@ export const {
   setCurrentCity,
   setCurrentState,
   setCurrentAddress,
+  setDefaultAddressState,
   setShopsInMyCity,
   setItemsInMyCity,
   addToCart,
