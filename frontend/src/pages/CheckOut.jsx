@@ -4,17 +4,29 @@ import { useNavigate } from "react-router-dom";
 import { IoLocationSharp } from "react-icons/io5";
 import { FaSearch } from "react-icons/fa";
 import { TbCurrentLocation } from "react-icons/tb";
-import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
-import { useDispatch, useSelector } from "react-redux";
+
+import {
+  MapContainer,
+  Marker,
+  Popup,
+  TileLayer,
+  useMap,
+} from "react-leaflet";
+
+import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { setAddress, setLocation } from "../redux/mapSlice";
-import axios from "axios";
-import { MdDeliveryDining } from "react-icons/md";
-import { FaMobileAlt } from "react-icons/fa";
-import { CiCreditCard1 } from "react-icons/ci";
-import { serverURL } from "../App";
-import { addMyOrder, clearCart } from "../redux/userSlice";
-import { showError } from "../utils/toast.js";
+
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
+
+delete L.Icon.Default.prototype._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerIcon2x,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+});
 
 function RecenterMap({ location }) {
   const map = useMap();
