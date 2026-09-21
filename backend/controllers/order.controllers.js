@@ -555,13 +555,29 @@ export const verifyDeliveyOtp = async (req, res) => {
 export const getTodayDeliveries = async (req, res) => {
   try {
     const deliveryBoyId = req.userId;
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
+    const timeZone = "Asia/Kolkata";
+    const now = new Date();
+    const indiaDateParts = new Intl.DateTimeFormat("en-IN", {
+      timeZone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).formatToParts(now);
+    const indiaDate = Object.fromEntries(
+      indiaDateParts
+        .filter(({ type }) => type !== "literal")
+        .map(({ type, value }) => [type, Number(value)]),
+    );
+    const startOfDay = new Date(
+      Date.UTC(indiaDate.year, indiaDate.month - 1, indiaDate.day) -
+        5.5 * 60 * 60 * 1000,
+    );
+    const endOfDay = new Date(startOfDay.getTime() + 24 * 60 * 60 * 1000);
 
     const orders = await Order.find({
       "shopOrders.assignedDeliveryBoy": deliveryBoyId,
       "shopOrders.status": "delivered",
-      "shopOrders.deliveredAt": { $gte: startOfDay },
+      "shopOrders.deliveredAt": { $gte: startOfDay, $lt: endOfDay },
     }).lean();
 
     let todaysDeliveries = [];
@@ -572,7 +588,8 @@ export const getTodayDeliveries = async (req, res) => {
           shopOrder.assignedDeliveryBoy == deliveryBoyId &&
           shopOrder.status == "delivered" &&
           shopOrder.deliveredAt &&
-          shopOrder.deliveredAt >= startOfDay
+          shopOrder.deliveredAt >= startOfDay &&
+          shopOrder.deliveredAt < endOfDay
         ) {
           todaysDeliveries.push(shopOrder);
         }
@@ -580,9 +597,14 @@ export const getTodayDeliveries = async (req, res) => {
     });
 
     let stats = {};
+    const hourFormatter = new Intl.DateTimeFormat("en-IN", {
+      timeZone,
+      hour: "numeric",
+      hour12: false,
+    });
 
     todaysDeliveries.forEach((shopOrder) => {
-      const hour = new Date(shopOrder.deliveredAt).getHours();
+      const hour = Number(hourFormatter.format(shopOrder.deliveredAt));
       stats[hour] = (stats[hour] || 0) + 1;
     });
 
